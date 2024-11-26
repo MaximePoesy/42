@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 16:27:22 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/10/25 17:24:41 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/11/18 16:54:19 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	calculate(const char *nptr, int sign)
 	while (*nptr >= '0' && *nptr <= '9')
 	{
 		digit = *nptr - '0';
-		if (nb > (size_t)(-1) / 10 || (nb == (size_t)(-1) / 10 && digit > 7))
+		if (nb > 214748364 || (nb == 214748364 && digit > 7))
 		{
 			if (sign < 0)
 				return (-2147483648);

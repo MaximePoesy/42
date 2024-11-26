@@ -1,24 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   parse_width.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 08:55:14 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/18 15:29:02 by mpoesy           ###   ########.fr       */
+/*   Created: 2024/11/06 09:14:24 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/11 10:39:05 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-size_t	ft_strlen(const char *str)
+int	parse_width(const char **str, int *iswidthsetup)
 {
-	size_t	i;
-	i = 0;
-	while (str[i] != '\0')
+	int	width;
+
+	width = 0;
+	if (**str >= '0' && **str <= '9')
 	{
-		i++;
+		*iswidthsetup = 1;
+		width = 0;
+		while (**str >= '0' && **str <= '9')
+		{
+			width = width * 10 + (**str - '0');
+			(*str)++;
+		}
 	}
-	return (i);
+	return (width);
 }

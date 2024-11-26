@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   parse_precision.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 08:55:14 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/18 15:29:02 by mpoesy           ###   ########.fr       */
+/*   Created: 2024/11/06 09:15:20 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/25 15:22:35 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../ft_printf_bonus.h"
 
-size_t	ft_strlen(const char *str)
+int	parse_precision(const char **str, int *flag)
 {
-	size_t	i;
-	i = 0;
-	while (str[i] != '\0')
+	int	precision;
+
+	precision = -1;
+	if (**str == '.')
 	{
-		i++;
+		(*flag) |= FLAG_DOT;
+		precision = 0;
+		(*str)++;
+		while (**str >= '0' && **str <= '9')
+		{
+			precision = precision * 10 + (**str - '0');
+			(*str)++;
+		}
 	}
-	return (i);
+	return (precision);
 }

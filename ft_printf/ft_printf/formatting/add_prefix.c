@@ -1,0 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_prefix.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 13:53:17 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/18 16:21:05 by mpoesy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../ft_printf.h"
+
+char	*add_prefix(char *str, char *prefix)
+{
+	char	*final_str;
+	int		len_str;
+	int		len_prefix;
+
+	if (!str || !prefix)
+		return (NULL);
+	len_str = ft_strlen(str);
+	len_prefix = ft_strlen(prefix);
+	final_str = (char *)malloc(len_str + len_prefix + 1);
+	if (!final_str)
+		return (NULL);
+	ft_strlcpy(final_str, prefix, len_prefix + 1);
+	ft_strlcpy(final_str + len_prefix, str, len_str + 1);
+	free(str);
+	return (final_str);
+}

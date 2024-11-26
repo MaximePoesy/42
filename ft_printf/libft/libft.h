@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 14:09:51 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/10/30 09:24:00 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/11/14 14:26:25 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,5 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 
+// Extra
 #endif

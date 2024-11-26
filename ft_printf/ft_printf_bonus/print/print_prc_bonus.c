@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   print_prc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 08:55:14 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/18 15:29:02 by mpoesy           ###   ########.fr       */
+/*   Created: 2024/11/04 14:03:47 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/04 15:36:58 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../ft_printf_bonus.h"
 
-size_t	ft_strlen(const char *str)
+int	print_prc(void)
 {
-	size_t	i;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
+	write(1, "%", 1);
+	return (1);
 }

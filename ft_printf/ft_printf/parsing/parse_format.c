@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   parse_format.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 08:55:14 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/18 15:29:02 by mpoesy           ###   ########.fr       */
+/*   Created: 2024/11/06 09:16:25 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/25 15:16:46 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../ft_printf.h"
 
-size_t	ft_strlen(const char *str)
+t_format	parse_format(const char **str)
 {
-	size_t	i;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
+	t_format	format;
+
+	format.iswidthsetup = 0;
+	format.flags = 0;
+	format.width = 0;
+	format.precision = -1;
+	format.flags = parse_flags(str);
+	format.width = parse_width(str, &format.iswidthsetup);
+	format.precision = parse_precision(str, &format.flags);
+	return (format);
 }
