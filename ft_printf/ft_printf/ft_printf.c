@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 09:04:04 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/26 17:03:31 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:22:43 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,14 @@ int	ft_printf(const char *str, ...)
 
 #include <limits.h>
 #include <stdio.h>
-int main()
+
+int	main(void)
 {
-	int a;
-	int b;
-	a = ft_printf(" %.3d\n", -1);
-	b = printf(" %.3d\n", -1);
+	int	a;
+	int	b;
+
+	a = ft_printf(" %-3d \n", 1);
+	b = printf(" %-3d \n", 1);
 	printf("%d ,%d\n",a,b);
 	return (0);
 }

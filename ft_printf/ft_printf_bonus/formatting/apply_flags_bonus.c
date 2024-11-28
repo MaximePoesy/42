@@ -12,19 +12,20 @@
 
 #include "../ft_printf_bonus.h"
 
-static char	*apply_precision(char *str, t_format *format)
+static char	*apply_precision(char *str, t_format *format, char specifier)
 {
-	size_t	len;
-	char	*new_str;
-
-	len = ft_strlen(str);
-	if (format->precision < 0 || format->precision >= len)
+	if (specifier == 'd' || specifier == 'i')
+		return (precision_d(str, format));
+	else if (specifier == 'u')
+		return (precision_u(str, format));
+	else if (specifier == 'x')
+		return (precision_x(str, format));
+	else if (specifier == 'X')
+		return (precision_cx(str, format));
+	else if (specifier == 's')
+		return (precision_s(str, format));
+	else
 		return (ft_strdup(str));
-	new_str = ft_calloc(format->precision + 1, sizeof(char));
-	if (!new_str)
-		return (NULL);
-	ft_memcpy(new_str, str, format->precision);
-	return (new_str);
 }
 
 static char	*apply_space_flag(char *str, t_format *format, char specifier)
@@ -70,25 +71,24 @@ static char	*apply_plus_flag(char *str, t_format *format, char specifier)
 }
 #include <stdio.h>
 
-char *apply_flags(char *str, t_format *format, char specifier)
+char	*apply_flags(char *str, t_format *format, char specifier)
 {
-    char *new_str;
+	char	*new_str;
 
-    new_str = apply_precision(str, format); 
-    if (new_str != str)
-        free(str);
-    str = new_str;
-    new_str = apply_width_and_padding(str, format, specifier);
-    if (new_str != str)
-        free(str);
-    str = new_str;
-    new_str = apply_space_flag(str, format, specifier);
-    if (new_str != str)
-        free(str);
-    str = new_str;
-    new_str = apply_plus_flag(str, format, specifier);
-    if (new_str != str)
-        free(str);
-    return (new_str);
+	new_str = apply_precision(str, format, specifier);
+	if (new_str != str)
+		free(str);
+	str = new_str;
+	new_str = apply_width_and_padding(str, format, specifier);
+	if (new_str != str)
+		free(str);
+	str = new_str;
+	new_str = apply_space_flag(str, format, specifier);
+	if (new_str != str)
+		free(str);
+	str = new_str;
+	new_str = apply_plus_flag(str, format, specifier);
+	if (new_str != str)
+		free(str);
+	return (new_str);
 }
-

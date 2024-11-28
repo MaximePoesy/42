@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 11:23:12 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/22 16:08:47 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/11/28 17:23:09 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,10 @@ char		*ft_itoa_base(size_t num, int base);
 char    *ft_utoa(unsigned int n);
 char		*apply_width_and_padding(char *str, t_format *format, char specifier);
 int     handle_zero(t_format *format);
+char *precision_d(char *str, t_format *format);
+char *precision_s(char *str, t_format *format);
+char *precision_u(char *str, t_format *format);
+char *precision_x(char *str, t_format *format);
+char *precision_cx(char *str, t_format *format);
 
 #endif

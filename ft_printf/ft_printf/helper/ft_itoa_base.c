@@ -15,9 +15,9 @@
 // Max : base 16
 char	*ft_itoa_base(size_t num, int base)
 {
-	char			*str;
-	char			*digits;
-	int				len;
+	char	*str;
+	char	*digits;
+	int		len;
 	size_t	n;
 
 	digits = "0123456789abcdef";

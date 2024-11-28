@@ -58,8 +58,14 @@ int			parse_flags(const char **str);
 char		*apply_flags(char *str, t_format *format, char specifier);
 char		*add_prefix(char *str, char *prefix);
 char		*ft_itoa_base(size_t num, int base);
-char    *ft_utoa(unsigned int n);
-char		*apply_width_and_padding(char *str, t_format *format, char specifier);
-int     handle_zero(t_format *format);
+char		*ft_utoa(unsigned int n);
+char		*apply_width_and_padding(char *str, t_format *format,
+				char specifier);
+int			handle_zero(t_format *format);
+char		*precision_d(char *str, t_format *format);
+char		*precision_s(char *str, t_format *format);
+char		*precision_u(char *str, t_format *format);
+char		*precision_x(char *str, t_format *format);
+char		*precision_cx(char *str, t_format *format);
 
 #endif

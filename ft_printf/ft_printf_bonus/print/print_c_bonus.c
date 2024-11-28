@@ -22,9 +22,9 @@ int	print_c(int c, t_format *format)
 		return (handle_zero(format));
 	str = (char *)malloc(2 * sizeof(char));
 	if (!str)
-        	return (0);
+		return (0);
 	str[0] = c;
-        str[1] = '\0';
+	str[1] = '\0';
 	formatted_str = apply_flags(str, format, 'c');
 	if (!formatted_str)
 		return (0);

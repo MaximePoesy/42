@@ -5,6 +5,11 @@ SRC = ft_printf/ft_printf.c \
       ft_printf/formatting/apply_flags.c \
       ft_printf/formatting/apply_width_and_padding.c \
       ft_printf/formatting/handle_zero.c \
+      ft_printf/formatting/precision/precision_d.c \
+      ft_printf/formatting/precision/precision_u.c \
+      ft_printf/formatting/precision/precision_s.c \
+      ft_printf/formatting/precision/precision_x.c \
+      ft_printf/formatting/precision/precision_cx.c \
       ft_printf/helper/ft_itoa_base.c \
       ft_printf/helper/ft_utoa.c \
       ft_printf/parsing/parse_flags.c \
@@ -25,6 +30,11 @@ BONUS_SRC = ft_printf_bonus/ft_printf_bonus.c \
 	    ft_printf_bonus/formatting/apply_flags_bonus.c \
 	    ft_printf_bonus/formatting/apply_width_and_padding_bonus.c \
 	    ft_printf_bonus/formatting/handle_zero_bonus.c \
+	    ft_printf_bonus/formatting/precision/precision_d_bonus.c \
+            ft_printf_bonus/formatting/precision/precision_u_bonus.c \
+            ft_printf_bonus/formatting/precision/precision_s_bonus.c \
+            ft_printf_bonus/formatting/precision/precision_x_bonus.c \
+            ft_printf_bonus/formatting/precision/precision_cx_bonus.c \
 	    ft_printf_bonus/helper/ft_itoa_base_bonus.c \
 	    ft_printf_bonus/helper/ft_utoa_bonus.c \
 	    ft_printf_bonus/parsing/parse_flags_bonus.c \

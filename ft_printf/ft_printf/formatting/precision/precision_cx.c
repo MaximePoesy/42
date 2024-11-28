@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_s.c                                          :+:      :+:    :+:   */
+/*   precision_X.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/04 12:43:24 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/26 16:01:57 by mpoesy           ###   ########.fr       */
+/*   Created: 2024/11/28 12:33:59 by mpoesy            #+#    #+#             */
+/*   Updated: 2024/11/28 16:10:54 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../ft_printf.h"
+#include "../../ft_printf.h"
 
-int	print_s(char *str, t_format *format)
+char	*precision_cx(char *str, t_format *format)
 {
-	int		num_char;
-	char	*new_str;
-	char	*test;
+	char	*result;
+	size_t	i;
 
-	if (!str)
+	result = precision_x(str, format);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (result[i])
 	{
-		new_str = "(null)";
-		write(1, new_str, 6);
-		return (6);
+		result[i] = ft_toupper(result[i]);
+		i++;
 	}
-	test = ft_strdup(str);
-	new_str = apply_flags(test, format, 's');
-	if (!new_str)
-	{
-		free(new_str);
-		return (0);
-	}
-	num_char = ft_strlen(new_str);
-	write(1, new_str, num_char);
-	free(new_str);
-	return (num_char);
+	return (result);
 }

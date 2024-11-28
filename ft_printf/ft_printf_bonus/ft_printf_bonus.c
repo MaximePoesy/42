@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_printf_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -65,10 +65,12 @@ int	ft_printf(const char *str, ...)
 /*
 #include <limits.h>
 #include <stdio.h>
-int main()
+
+int	main(void)
 {
-	int a;
-	int b;
+	int	a;
+	int	b;
+
 	a = ft_printf("%.1s%.2s%.3s%.4s\n", " - ", "", "4", "");
 	b = printf("%.1s%.2s%.3s%.4s\n", " - ", "", "4", "");
 	printf("%d ,%d\n",a,b);
