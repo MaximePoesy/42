@@ -6,15 +6,15 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:15:20 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/25 15:22:35 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/12/02 11:08:46 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ft_printf.h"
 
-int	parse_precision(const char **str, int *flag)
+size_t	parse_precision(const char **str, int *flag)
 {
-	int	precision;
+	size_t	precision;
 
 	precision = -1;
 	if (**str == '.')

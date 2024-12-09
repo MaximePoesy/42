@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 09:04:04 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/28 17:22:43 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/12/06 15:43:51 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	ft_printf(const char *str, ...)
 		if (*str == '%')
 		{
 			str++;
+			if (!*str)
+				break ;
 			format = parse_format(&str);
 			num_char += check_char(&str, args, &format);
 		}
@@ -62,7 +64,7 @@ int	ft_printf(const char *str, ...)
 	va_end(args);
 	return (num_char);
 }
-
+/*
 #include <limits.h>
 #include <stdio.h>
 
@@ -71,9 +73,9 @@ int	main(void)
 	int	a;
 	int	b;
 
-	a = ft_printf(" %-3d \n", 1);
-	b = printf(" %-3d \n", 1);
-	printf("%d ,%d\n",a,b);
+	a = ft_printf("%05s", a);
+	b = printf("%05s", a);
+	printf("%d, %d\n", a, b);
 	return (0);
 }
-
+*/

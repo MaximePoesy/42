@@ -6,11 +6,12 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:16:25 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/25 15:16:46 by mpoesy           ###   ########.fr       */
+/*   Updated: 2024/12/02 10:46:24 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../ft_printf.h"
+#include <stdio.h>
 
 t_format	parse_format(const char **str)
 {

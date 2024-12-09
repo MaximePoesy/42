@@ -12,6 +12,20 @@
 
 #include "../ft_printf_bonus.h"
 
+int	handle_null_string(t_format *format)
+{
+	char	*new_str;
+
+	if ((format->iswidthsetup == 1 && format->width > 6)
+		|| format->precision < 6)
+		return (i_dont_get_why_its_like_this(format, 's'));
+	else
+	{
+		new_str = "(null)";
+		return (write(1, new_str, 6));
+	}
+}
+
 int	print_s(char *str, t_format *format)
 {
 	int		num_char;
@@ -20,9 +34,7 @@ int	print_s(char *str, t_format *format)
 
 	if (!str)
 	{
-		new_str = "(null)";
-		write(1, new_str, 6);
-		return (6);
+		return (handle_null_string(format));
 	}
 	test = ft_strdup(str);
 	new_str = apply_flags(test, format, 's');

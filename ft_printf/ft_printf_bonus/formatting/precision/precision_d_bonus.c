@@ -20,8 +20,13 @@ char	*precision_d(char *str, t_format *format)
 
 	len = ft_strlen(str);
 	is_negative = (str[0] == '-');
-	if (format->precision < 0 || format->precision <= len - is_negative)
+	if (format->precision == 0 && str[0] == '0' && str[1] == '\0')
+		return (ft_strdup(""));
+	if (format->precision == (size_t)-1 || format->precision <= len
+		- is_negative)
 		return (ft_strdup(str));
+	if (format->precision > 2147483648)
+		return (NULL);
 	new_str = ft_calloc(format->precision + is_negative + 1, sizeof(char));
 	if (!new_str)
 		return (NULL);

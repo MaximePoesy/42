@@ -32,8 +32,8 @@ static char	*apply_space_flag(char *str, t_format *format, char specifier)
 {
 	char	*tmp;
 
-	if (format->flags & FLAG_SPACE && (specifier == 'd' || specifier == 'i'
-			|| specifier == 'u'))
+	if (format->flags & FLAG_SPACE && !(format->flags & FLAG_PLUS)
+		&& (specifier == 'd' || specifier == 'i' || specifier == 'u'))
 	{
 		if (str[0] != '-' && str[0] != '+')
 		{
@@ -43,7 +43,6 @@ static char	*apply_space_flag(char *str, t_format *format, char specifier)
 				return (NULL);
 			str[0] = ' ';
 			ft_strlcpy(str + 1, tmp, ft_strlen(tmp) + 1);
-			free(tmp);
 		}
 	}
 	return (str);
@@ -64,31 +63,37 @@ static char	*apply_plus_flag(char *str, t_format *format, char specifier)
 				return (NULL);
 			str[0] = '+';
 			ft_strlcpy(str + 1, tmp, ft_strlen(tmp) + 1);
-			free(tmp);
 		}
 	}
 	return (str);
 }
-#include <stdio.h>
+
+static void	malloc_check(char *str, char *new_str)
+{
+	if (new_str != str)
+		free(str);
+}
 
 char	*apply_flags(char *str, t_format *format, char specifier)
 {
 	char	*new_str;
 
 	new_str = apply_precision(str, format, specifier);
-	if (new_str != str)
-		free(str);
+	malloc_check(str, new_str);
 	str = new_str;
-	new_str = apply_width_and_padding(str, format, specifier);
-	if (new_str != str)
-		free(str);
+	new_str = add_prefix(str, specifier);
+	malloc_check(str, new_str);
 	str = new_str;
 	new_str = apply_space_flag(str, format, specifier);
-	if (new_str != str)
-		free(str);
+	malloc_check(str, new_str);
 	str = new_str;
 	new_str = apply_plus_flag(str, format, specifier);
-	if (new_str != str)
-		free(str);
+	malloc_check(str, new_str);
+	str = new_str;
+	new_str = apply_hash_flag(str, format, specifier);
+	malloc_check(str, new_str);
+	str = new_str;
+	new_str = apply_width_and_padding(str, format, specifier);
+	malloc_check(str, new_str);
 	return (new_str);
 }

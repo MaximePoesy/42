@@ -12,6 +12,19 @@
 
 #include "../ft_printf_bonus.h"
 
+static int	write_padding(int width, char pad_char)
+{
+	int	num_char;
+
+	num_char = 0;
+	while (num_char < width)
+	{
+		write(1, &pad_char, 1);
+		num_char++;
+	}
+	return (num_char);
+}
+
 int	handle_zero(t_format *format)
 {
 	int		width;
@@ -26,8 +39,7 @@ int	handle_zero(t_format *format)
 	if (format->flags & FLAG_MINUS)
 	{
 		write(1, "\0", 1);
-		while (num_char++ < width - 1)
-			write(1, " ", 1);
+		num_char += 1 + write_padding(width - 1, ' ');
 	}
 	else
 	{
@@ -35,11 +47,7 @@ int	handle_zero(t_format *format)
 			pad_char = '0';
 		else
 			pad_char = ' ';
-		while (num_char < width - 1)
-		{
-			write(1, &pad_char, 1);
-			num_char++;
-		}
+		num_char += write_padding(width - 1, pad_char);
 		write(1, "\0", 1);
 		num_char++;
 	}

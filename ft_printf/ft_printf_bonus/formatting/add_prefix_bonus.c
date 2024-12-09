@@ -12,12 +12,17 @@
 
 #include "../ft_printf_bonus.h"
 
-char	*add_prefix(char *str, char *prefix)
+char	*add_prefix(char *str, char specifier)
 {
 	char	*final_str;
+	char	*prefix;
 	int		len_str;
 	int		len_prefix;
 
+	if (!(specifier == 'p'))
+		return (str);
+	else
+		prefix = "0x";
 	if (!str || !prefix)
 		return (NULL);
 	len_str = ft_strlen(str);
@@ -27,6 +32,5 @@ char	*add_prefix(char *str, char *prefix)
 		return (NULL);
 	ft_strlcpy(final_str, prefix, len_prefix + 1);
 	ft_strlcpy(final_str + len_prefix, str, len_str + 1);
-	free(str);
 	return (final_str);
 }

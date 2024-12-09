@@ -12,9 +12,9 @@
 
 #include "../ft_printf_bonus.h"
 
-int	parse_precision(const char **str, int *flag)
+size_t	parse_precision(const char **str, int *flag)
 {
-	int	precision;
+	size_t	precision;
 
 	precision = -1;
 	if (**str == '.')

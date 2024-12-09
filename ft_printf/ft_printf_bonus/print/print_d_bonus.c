@@ -20,7 +20,16 @@ int	print_d(int nbr, t_format *format)
 
 	str = ft_itoa(nbr);
 	if (!str)
-		return (0);
+	{
+		if ((format->iswidthsetup == 1 && format->width > 6)
+			|| format->precision < 6)
+			return (i_dont_get_why_its_like_this(format, 'p'));
+		else
+		{
+			str = "(nil)";
+			return (write(1, str, 5));
+		}
+	}
 	new_str = apply_flags(str, format, 'd');
 	if (!new_str)
 		return (0);
