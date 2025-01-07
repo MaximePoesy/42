@@ -6,11 +6,15 @@
 /*   By: gemartin <gemartin@student.42barc...>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:53:00 by gemartin          #+#    #+#             */
-/*   Updated: 2022/03/02 13:45:14 by gemartin         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:12:56 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4
+# endif
 
 # define FD_MAX 1024
 # include <fcntl.h>

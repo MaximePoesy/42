@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gemartin <gemartin@student.42barc...>      +#+  +:+       +#+        */
+/*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/07 00:41:32 by gemartin          #+#    #+#             */
-/*   Updated: 2022/03/02 12:48:07 by gemartin         ###   ########.fr       */
+/*   Created: 2025/01/06 09:21:16 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/01/06 09:22:08 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4
+# endif
+
+# define FD_MAX 1024
 # include <fcntl.h>
-# include <limits.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
