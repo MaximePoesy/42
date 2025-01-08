@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:27:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/07 15:31:08 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/08 14:31:45 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,21 @@
 
 # include "minilibx-linux/mlx.h"
 # include <stdlib.h>
+# include <stdio.h>
+# include <math.h>
+# include <unistd.h>
+
+#ifndef ITERATIONS_MAX
+# define ITERATIONS_MAX 10
+#endif
+
+#ifndef CONST_RE
+# define CONST_RE 0.5
+#endif
+
+#ifndef CONST_IM
+# define CONST_IM 0.5
+#endif
 
 typedef struct s_data
 {

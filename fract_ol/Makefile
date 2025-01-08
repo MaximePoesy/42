@@ -19,12 +19,12 @@ $(NAME): $(OBJ) $(MLX_DIR)/libmlx.a
 	$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 
 clean:
-	rm -f $(OBJ)
-	cd $(MLX_DIR) && make clean
+	rm fract_ol.o
+	#rm -f $(OBJ)
+	#cd $(MLX_DIR) && make clean
 
 fclean: clean
 	rm -f $(NAME)
 	cd $(MLX_DIR) && make fclean
 
-re: fclean all
-
+re: clean all
