@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:27:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/08 14:31:45 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/10 16:12:13 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@
 # include <unistd.h>
 
 #ifndef ITERATIONS_MAX
-# define ITERATIONS_MAX 10
+# define ITERATIONS_MAX 200
 #endif
 
 #ifndef CONST_RE
-# define CONST_RE 0.5
+# define CONST_RE 0.4
 #endif
 
 #ifndef CONST_IM
-# define CONST_IM 0.5
+# define CONST_IM 0.4
 #endif
 
 typedef struct s_data

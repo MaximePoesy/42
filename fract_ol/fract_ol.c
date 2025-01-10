@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:11:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/08 14:31:07 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/10 16:14:50 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,90 +38,52 @@ void	init_window(t_data *data, int width, int height, char *title)
 	data->img_data = (int *)mlx_get_data_addr(data->img_ptr, &(int){0},
 			&(int){0}, &(int){0});
 }
-/*
-int	julia(double re, double im)
+
+int julia(double re, double im)
 {
-	double	num_re;
-	double	num_im;
-	double	temp_re;
-	int		count;
+    double num_re = re;
+    double num_im = im;
+    double temp_re;
+    int count = 0;
 
-	num_re = re;
-	num_im = im;
-	count = 0;
-	while (count < ITERATIONS_MAX)
-	{
-		temp_re = (num_re * num_re) - (num_im * num_im) + CONST_RE;
-		num_im = (2 * num_re * num_im) + CONST_IM;
-		num_re = temp_re;
-		count++;
-		if ((num_re * num_re + num_im * num_im) > 4)
-			break ;
-	}
-	return (count);
-}
+    while (count < ITERATIONS_MAX)
+    {
+        temp_re = (num_re * num_re) - (num_im * num_im) + CONST_RE;
+        num_im = (2 * num_re * num_im) + CONST_IM;
+        num_re = temp_re;
 
-void	apply_red_tint(t_data *data)
-{
-	int		x;
-	int		y;
-	int		index;
-	int		iteration;
-	int		color;
-	double	smooth_color;
-	int		red;
-	int		green;
-	int		blue;
-
-	y = 0;
-	while (y < data->height)
-	{
-		x = 0;
-		while (x < data->width)
-		{
-			iteration = julia((x - data->width / 2.0) * 4.0 / data->width, (y
-						- data->height / 2.0) * 4.0 / data->height);
-			smooth_color = iteration + 1.0 - log(log(sqrt(x * x + y * y)));
-			color = (int)(smooth_color * 255.0 / ITERATIONS_MAX);
-			red = (color * 255) / 256;
-			green = (color * 150) / 256;
-			blue = (color * 64) / 256;
-			index = y * data->width + x;
-			data->img_data[index] = (red << 16) | (green << 8) | blue;
-			x++;
-		}
-		y++;
-	}
-}
-*/
-
-int     julia(double re, double im)
-{
-        double  num_re;
-        double  num_im;
-        double  temp_re;
-        int             count;
-
-        num_re = re;
-        num_im = im;
-        count = 0;
-        while (count < ITERATIONS_MAX)
+        if ((num_re * num_re + num_im * num_im) > 4)
         {
-                temp_re = (num_re * num_re) - (num_im * num_im) + CONST_RE;
-                num_im = (2 * num_re * num_im) + CONST_IM;
-                num_re = temp_re;
-                count++;
-                if ((num_re * num_re + num_im * num_im) > 4)
-                        break ;
+            double magnitude = sqrt(num_re * num_re + num_im * num_im);
+            return count + 1 - log2(log2(magnitude));
         }
-        return (count);
+        count++;
+    }
+    return ITERATIONS_MAX;
 }
 
-void    apply_fractal_with_iterations(t_data *data, int iterations_to_show)
+int create_color(double smooth_iteration)
 {
-    int x, y, index, iteration;
-    int red, green, blue;
-    double smooth_color;
+    double normalized = smooth_iteration / ITERATIONS_MAX;
+
+    // Ensure normalization stays in range [0, 1]
+    if (normalized > 1.0)
+        normalized = 1.0;
+    else if (normalized < 0.0)
+        normalized = 0.0;
+
+    // Gradient color mapping
+    int red = (int)(9 * (1 - normalized) * normalized * normalized * normalized * 255);
+    int green = (int)(15 * (1 - normalized) * (1 - normalized) * normalized * normalized * 255);
+    int blue = (int)(8.5 * (1 - normalized) * (1 - normalized) * (1 - normalized) * normalized * 255);
+
+    return (red << 16) | (green << 8) | blue;
+}
+
+void apply_red_tint(t_data *data)
+{
+    int x, y, index, color;
+    double re, im, smooth_iter;
 
     y = 0;
     while (y < data->height)
@@ -129,53 +91,24 @@ void    apply_fractal_with_iterations(t_data *data, int iterations_to_show)
         x = 0;
         while (x < data->width)
         {
-            // Adjust for the view and scale the coordinates to map them to the fractal space
-            iteration = julia((x - data->width / 2.0) * 4.0 / data->width, 
-                              (y - data->height / 2.0) * 4.0 / data->height);
-            
-            // Only show up to 'iterations_to_show' iterations
-            if (iteration >= iterations_to_show)
-                iteration = iterations_to_show;
+            // Map pixel (x, y) to complex plane
+            re = (x - data->width / 2.0) * 4.0 / data->width;
+            im = (y - data->height / 2.0) * 4.0 / data->height;
 
-            // Apply smooth color transition
-            smooth_color = iteration + 1.0 - log(log(sqrt(x * x + y * y)));
-            int color = (int)(smooth_color * 255.0 / ITERATIONS_MAX);
+            // Get smooth iteration value
+            smooth_iter = julia(re, im);
 
-            // Create RGB values with a gradient
-            red = (color * 255) / 256;
-            green = (color * 150) / 256;
-            blue = (color * 64) / 256;
+            // Create color based on smooth iteration
+            color = create_color(smooth_iter);
 
-            // Store the color value in the image data
+            // Set pixel color
             index = y * data->width + x;
-            data->img_data[index] = (red << 16) | (green << 8) | blue;
-
+            data->img_data[index] = color;
             x++;
         }
         y++;
     }
-
-    // Put the image data to the window
-    mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img_ptr, 0, 0);
 }
-
-void    apply_red_tint(t_data *data)
-{
-    int iterations_to_show = 1;
-
-    // Loop to incrementally display iterations
-    while (iterations_to_show <= ITERATIONS_MAX)
-    {
-        mlx_clear_window(data->mlx_ptr, data->win_ptr);  // Clear the window
-        apply_fractal_with_iterations(data, iterations_to_show);  // Apply fractal with limited iterations
-        usleep(100000);  // Wait for a short period (100ms)
-
-        iterations_to_show++;  // Increase iterations to show more details
-    }
-}
-
-
-
 
 // Mouse hook function
 // Button == 1 is for left click
