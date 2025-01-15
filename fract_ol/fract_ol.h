@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:27:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/10 16:12:13 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/15 14:50:26 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,22 @@
 # define FRACT_OL_H
 
 # include "minilibx-linux/mlx.h"
+# include "libft/libft.h"
 # include <stdlib.h>
 # include <stdio.h>
 # include <math.h>
 # include <unistd.h>
 
 #ifndef ITERATIONS_MAX
-# define ITERATIONS_MAX 200
+# define ITERATIONS_MAX 400
 #endif
 
-#ifndef CONST_RE
-# define CONST_RE 0.4
+#ifndef CONST_RE 
+# define CONST_RE 0.285
 #endif
 
 #ifndef CONST_IM
-# define CONST_IM 0.4
+# define CONST_IM 0.01
 #endif
 
 typedef struct s_data
@@ -39,6 +40,8 @@ typedef struct s_data
 	int		*img_data;
 	int		width;
 	int		height;
+	double	const_re;
+	double	const_im;
 }			t_data;
 
 #endif
