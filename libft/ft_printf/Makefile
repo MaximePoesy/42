@@ -73,13 +73,15 @@ bonus: $(OBJ) $(BONUS_OBJ)
 	ranlib $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(BONUS_OBJ)
+	@echo "cleaning ft_printf files..."
+	@rm -f $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@echo "cleaning ft_printf executables..."
+	@rm -f $(NAME)
 
 re: fclean all
 

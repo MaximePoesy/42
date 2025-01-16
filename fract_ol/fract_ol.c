@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:11:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/15 17:34:12 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/16 12:19:44 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,16 @@ void	show_menu(void)
 	ft_printf("Usage: -m : Mandelbrot set\n");
 	ft_printf("Usage: CONST_RE : Real part of the constant");
 	ft_printf("implemented as float\n");
+	ft_printf("May only be 10 characters max\n");
 	ft_printf("Usage: CONST_IM : Imaginary part of the constant");
 	ft_printf("implemented as float\n");
+	ft_printf("May only be 10 characters max\n");
 }
 
 int	check_set(int argc, char **argv)
 {
+	char	str[10];
+
 	if (argc != 4)
 	{
 		ft_printf("Wrong number of arguments.\n");
@@ -166,8 +170,8 @@ int	check_set(int argc, char **argv)
 		show_menu();
 		return (1);
 	}
-	if (!ft_strcmp(argv[2], ft_atof(argv[2])) || !ft_strcmp(argv[3],
-			ft_atof(argv[3])) || argv[2] == "" || argv[3] = "")
+	if (!ft_strcmp(argv[2], ft_ftoa(ft_atof(argv[2]), str, 10)) || !ft_strcmp(argv[3],
+			ft_ftoa(ft_atof(argv[3]), str, 10)) || ft_strcmp(argv[2], "") || ft_strcmp(argv[3], ""))
 	{
 		ft_printf("Wrong arguments\n");
 		show_menu();

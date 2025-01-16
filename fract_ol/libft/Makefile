@@ -5,7 +5,7 @@ SRC = ft_strlen.c ft_memset.c ft_bzero.c ft_isalpha.c ft_isdigit.c \
       ft_atoi.c ft_calloc.c ft_strdup.c ft_substr.c ft_strjoin.c \
       ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c ft_striteri.c \
       ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
-      ft_strcmp.c ft_isspace.c ft_atof.c
+      ft_strcmp.c ft_isspace.c ft_atof.c ft_ftoa.c
 
 NAME = libft.a
 FT_PRINTF_DIR = ft_printf
@@ -18,19 +18,23 @@ CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME) $(FT_PRINTF)
 
-$(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+$(NAME): $(OBJ) $(FT_PRINTF)
+	@echo "Archiving libft files..."
+	@cp $(FT_PRINTF) $(NAME)
+	@ar rcs $(NAME) $(OBJ)
 
 $(FT_PRINTF):
-	make -C $(FT_PRINTF_DIR)
+	@make -C $(FT_PRINTF_DIR)
 	
 clean:
-	rm -f $(OBJ)
-	make -C $(FT_PRINTF_DIR) clean
+	@echo "Removing libft files..."
+	@rm -f $(OBJ)
+	@make -s -C $(FT_PRINTF_DIR) clean
 
 fclean: clean
-	rm -f $(NAME)
-	make -C $(FT_PRINTF_DIR) fclean
+	@echo "Removing executables..."
+	@rm -f $(NAME)
+	@make -s -C $(FT_PRINTF_DIR) fclean
 
 re: fclean all
 
