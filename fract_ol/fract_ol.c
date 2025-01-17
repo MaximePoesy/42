@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:11:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/16 12:19:44 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/17 11:06:06 by event            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,22 +136,33 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 int	close_window(t_data *data)
 {
 	if (data->win_ptr)
+	{
+		mlx_destroy_image(data->mlx_ptr, data->img_ptr);
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+		mlx_destroy_display(data->mlx_ptr);
+		free(data->mlx_ptr);
+	}
 	exit(0);
 	return (0);
 }
 
 void	show_menu(void)
 {
-	ft_printf("Usage: ./fract_ol -j/-m CONST_RE CONST_IM\n");
-	ft_printf("Usage: -j : Julia set\n");
-	ft_printf("Usage: -m : Mandelbrot set\n");
+	ft_printf("-------------------------------------------------------------------------------\n");
+	ft_printf("--------------------------------- FRACT_OL ------------------------------------\n");
+	ft_printf("-------------------------------------------------------------------------------\n");
+	ft_printf("\nUsage: ./fract_ol -j/-m CONST_RE CONST_IM\n\n");
+	ft_printf("Usage: -j : Julia set\n\n");
+	ft_printf("Usage: -m : Mandelbrot set\n\n");
 	ft_printf("Usage: CONST_RE : Real part of the constant");
-	ft_printf("implemented as float\n");
-	ft_printf("May only be 10 characters max\n");
+	ft_printf(" implemented as float\n");
+	ft_printf("May only be 10 characters max\n\n");
 	ft_printf("Usage: CONST_IM : Imaginary part of the constant");
-	ft_printf("implemented as float\n");
-	ft_printf("May only be 10 characters max\n");
+	ft_printf(" implemented as float\n");
+	ft_printf("May only be 10 characters max\n\n");
+	ft_printf("-------------------------------------------------------------------------------\n");
+        ft_printf("--------------------------------- FRACT_OL ------------------------------------\n");
+        ft_printf("-------------------------------------------------------------------------------\n");
 }
 
 int	check_set(int argc, char **argv)
@@ -166,7 +177,7 @@ int	check_set(int argc, char **argv)
 	}
 	if (ft_strcmp(argv[1], "-j") && ft_strcmp(argv[1], "-m"))
 	{
-		ft_printf("Wrong arguments\n");
+		ft_printf("Wrong sets arguments\n");
 		show_menu();
 		return (1);
 	}
@@ -189,7 +200,7 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (!check_set(argc, argv))
+	if (check_set(argc, argv))
 		return (0);
 
 	init_window(&data, 1000, 1000, "fract_ol");
