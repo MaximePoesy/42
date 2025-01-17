@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 14:09:51 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/16 17:52:34 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/17 14:18:49 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,5 @@ int		ft_strcmp(const char *s1, const char *s2);
 int		ft_isspace(const char *c);
 double	ft_atof(const char *str);
 char	*ft_ftoa(double value, char *buffer, int max_chars);
+int		ft_is_float(const char *str);
 #endif

@@ -64,13 +64,20 @@ CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ)	
-	ar rcs $@ $(OBJ)
-	ranlib $@
+$(NAME): echo_compiling $(OBJ) 
+	@echo "Archiving ft_printf..."
+	@ar rcs $(NAME) $(OBJ)
+	@ranlib $(NAME)
+	@echo "Archived!"
 
-bonus: $(OBJ) $(BONUS_OBJ)
-	ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
-	ranlib $(NAME)
+bonus: echo_compiling $(OBJ) $(BONUS_OBJ)
+	@echo "Archiving ft_printf..."
+	@ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
+	@ranlib $(NAME)
+	@echo "Archived!"
+
+echo_compiling:
+	@echo "Compiling source files..."
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@

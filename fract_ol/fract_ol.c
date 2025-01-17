@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:11:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/17 11:06:06 by event            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:32:25 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	init_window(t_data *data, int width, int height, char *title)
 
 // Return the number of interations needed to escape using the julia set
 // Also change the output to better output low values using double log2
-int	julia(double re, double im)
+int	julia(double re, double im, t_data *data)
 {
 	double	num_re;
 	double	num_im;
@@ -54,8 +54,8 @@ int	julia(double re, double im)
 	count = 0;
 	while (count < ITERATIONS_MAX)
 	{
-		temp_re = (num_re * num_re) - (num_im * num_im) + CONST_RE;
-		num_im = (2 * num_re * num_im) + CONST_IM;
+		temp_re = (num_re * num_re) - (num_im * num_im) + data->const_re;
+		num_im = (2 * num_re * num_im) + data->const_im;
 		num_re = temp_re;
 		if ((num_re * num_re + num_im * num_im) > 4)
 		{
@@ -110,15 +110,18 @@ void	pixel_display_julia(t_data *data)
 			re = (x - data->width / 2.0) * 4.0 / data->width;
 			im = -(y - data->height / 2.0) * 4.0 / data->height;
 			index = y * data->width + x;
-			data->img_data[index] = create_color(julia(re, im));
+			data->img_data[index] = create_color(julia(re, im, data));
 			x++;
 		}
 		y++;
 	}
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img_ptr, 0,
+                        0);
 }
 
 // Mouse hook function
 // Button == 1 is for left click
+/*
 int	mouse_hook(int button, int x, int y, t_data *data)
 {
 	(void)x;
@@ -131,7 +134,7 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 	}
 	return (0);
 }
-
+*/
 // Close the window and clean up
 int	close_window(t_data *data)
 {
@@ -161,14 +164,12 @@ void	show_menu(void)
 	ft_printf(" implemented as float\n");
 	ft_printf("May only be 10 characters max\n\n");
 	ft_printf("-------------------------------------------------------------------------------\n");
-        ft_printf("--------------------------------- FRACT_OL ------------------------------------\n");
-        ft_printf("-------------------------------------------------------------------------------\n");
+	ft_printf("--------------------------------- FRACT_OL ------------------------------------\n");
+	ft_printf("-------------------------------------------------------------------------------\n");
 }
 
 int	check_set(int argc, char **argv)
 {
-	char	str[10];
-
 	if (argc != 4)
 	{
 		ft_printf("Wrong number of arguments.\n");
@@ -181,8 +182,7 @@ int	check_set(int argc, char **argv)
 		show_menu();
 		return (1);
 	}
-	if (!ft_strcmp(argv[2], ft_ftoa(ft_atof(argv[2]), str, 10)) || !ft_strcmp(argv[3],
-			ft_ftoa(ft_atof(argv[3]), str, 10)) || ft_strcmp(argv[2], "") || ft_strcmp(argv[3], ""))
+	if (!ft_is_float(argv[2]) || !ft_is_float(argv[3]))
 	{
 		ft_printf("Wrong arguments\n");
 		show_menu();
@@ -202,13 +202,16 @@ int	main(int argc, char **argv)
 
 	if (check_set(argc, argv))
 		return (0);
-
 	init_window(&data, 1000, 1000, "fract_ol");
 	if (ft_strcmp(argv[1], "-j"))
+	{
+		data.const_re = ft_atof(argv[2]);
+		data.const_im = ft_atof(argv[3]);
 		pixel_display_julia(&data);
-	mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img_ptr, 0, 0);
+	}
+	//mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img_ptr, 0, 0);
 	mlx_hook(data.win_ptr, 17, 0, (int (*)(void *))close_window, &data);
-	mlx_mouse_hook(data.win_ptr, mouse_hook, &data);
+	//mlx_mouse_hook(data.win_ptr, mouse_hook, &data);
 	mlx_loop(data.mlx_ptr);
 	return (0);
 }

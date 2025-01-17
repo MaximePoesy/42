@@ -13,24 +13,24 @@
 #ifndef FRACT_OL_H
 # define FRACT_OL_H
 
-# include "minilibx-linux/mlx.h"
 # include "libft/libft.h"
-# include <stdlib.h>
-# include <stdio.h>
+# include "minilibx-linux/mlx.h"
 # include <math.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <unistd.h>
 
-#ifndef ITERATIONS_MAX
-# define ITERATIONS_MAX 400
-#endif
+# ifndef ITERATIONS_MAX
+#  define ITERATIONS_MAX 400
+# endif
 
-#ifndef CONST_RE 
-# define CONST_RE 0.285
-#endif
+# ifndef CONST_RE
+#  define CONST_RE 0.285
+# endif
 
-#ifndef CONST_IM
-# define CONST_IM 0.01
-#endif
+# ifndef CONST_IM
+#  define CONST_IM 0.01
+# endif
 
 typedef struct s_data
 {

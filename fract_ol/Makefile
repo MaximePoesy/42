@@ -24,16 +24,21 @@ $(NAME): $(OBJ) $(MLX_DIR)/libmlx.a $(LIBFT_DIR)/libft.a
 	@$(CC) $(OBJ) $(LDFLAGS) -o $(NAME)
 
 clean:
+	@echo "Cleaning fractol object files..."
 	@rm -f $(OBJ)
-	@echo "Removing object files from minilibx..."
-	@cd $(MLX_DIR) && make clean && cd ..
-	@echo "Removing object files from libft..."
-	@cd $(LIBFT_DIR) && make clean && cd ..
+	@echo "Cleaning MiniLibX object files..."
+	@make -s -C $(MLX_DIR) clean
+	@echo "Cleaning libft object files..."
+	@make -s -C $(LIBFT_DIR) clean
+	@echo "fract_ol CLEANED!"
 
-fclean: clean
-	@echo "Removing object files from libft..."
-	@cd $(LIBFT_DIR) && make fclean && cd ..
-	@echo "Cleaning executable files..."
+fclean:
+	@echo "Cleaning fractol object files..."
+	@rm -f $(OBJ)
+	@echo "Removing libft archive..."
+	@make -s -C $(LIBFT_DIR) fclean
+	@echo "Removing fractol executable..."
 	@rm -f $(NAME)
+	@echo "fract_ol FCLEANED!"
 
 re: clean all

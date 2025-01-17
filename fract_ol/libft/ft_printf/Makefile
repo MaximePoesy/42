@@ -64,24 +64,35 @@ CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ)	
-	ar rcs $@ $(OBJ)
-	ranlib $@
+$(NAME): echo_compiling $(OBJ) 
+	@echo "Archiving ft_printf..."
+	@ar rcs $(NAME) $(OBJ)
+	@ranlib $(NAME)
+	@echo "ft_printf BUILT!"
 
-bonus: $(OBJ) $(BONUS_OBJ)
-	ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
-	ranlib $(NAME)
+bonus: echo_compiling $(OBJ) $(BONUS_OBJ)
+	@echo "Archiving ft_printf..."
+	@ar rcs $(NAME) $(OBJ) $(BONUS_OBJ)
+	@ranlib $(NAME)
+	@echo "ft_printf_bonus BUILT!"
+
+echo_compiling:
+	@echo "Compiling source files..."
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo "cleaning ft_printf files..."
+	@echo "Cleaning ft_printf files..."
 	@rm -f $(OBJ) $(BONUS_OBJ)
+	@echo "ft_printf & ft_printf_bonus CLEANED!"
 
-fclean: clean
-	@echo "cleaning ft_printf executables..."
+fclean:
+	@echo "Cleaning ft_printf files..."
+	@rm -f $(OBJ) $(BONUS_OBJ)
+	@echo "Cleaning ft_printf executables..."
 	@rm -f $(NAME)
+	@echo "ft_printf & ft_printf_bonus FCLEANED!"
 
 re: fclean all
 
