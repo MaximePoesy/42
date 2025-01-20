@@ -6,13 +6,13 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 14:16:12 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/17 14:17:51 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/17 14:33:49 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	is_float(const char *str)
+int	ft_is_float(const char *str)
 {
 	int	i;
 	int	has_digit;
@@ -31,7 +31,7 @@ int	is_float(const char *str)
 				return (0);
 			has_dot = 1;
 		}
-		else if (!isdigit(str[i]))
+		else if (!ft_isdigit(str[i]))
 			return (0);
 		else
 			has_digit = 1;

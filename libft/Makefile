@@ -1,3 +1,9 @@
+# Define color codes
+RESET = \033[0m
+GREEN = \033[32m
+BLUE = \033[34m
+YELLOW = \033[33m
+
 SRC = ft_strlen.c ft_memset.c ft_bzero.c ft_isalpha.c ft_isdigit.c \
       ft_isalnum.c ft_isascii.c ft_isprint.c ft_memcpy.c ft_memmove.c \
       ft_strlcpy.c ft_strlcat.c ft_toupper.c ft_tolower.c ft_strchr.c \
@@ -16,35 +22,47 @@ OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME) $(FT_PRINTF)
+# Default target
+all: $(NAME)
 
-$(NAME): echo_compiling $(OBJ) $(FT_PRINTF)
-	@echo "Archiving libft files..."
+# Building the library
+$(NAME): $(OBJ) $(FT_PRINTF)
+	@echo "$(BLUE)Starting to build libft...$(RESET)"
+	@echo "$(BLUE)Adding ft_printf...$(RESET)"
 	@cp $(FT_PRINTF) $(NAME)
+	@echo "$(BLUE)Archiving libft files...$(RESET)"
 	@ar rcs $(NAME) $(OBJ)
-	@echo "DONE !"
+	@echo "$(GREEN)libft BUILT!$(RESET)"
 
-echo_compiling:
-	@echo "Compiling source files..."
+# Building ft_printf
+$(FT_PRINTF):
+	@echo "$(BLUE)Compiling ft_printf...$(RESET)"
+	@make -s -C $(FT_PRINTF_DIR)
+	@echo "$(GREEN)ft_printf COMPILED!$(RESET)"
 
+# Object file compilation
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(FT_PRINTF):
-	@make -C $(FT_PRINTF_DIR)
-	
+# Cleaning object files
 clean:
-	@echo "Removing libft files..."
+	@echo "$(BLUE)Cleaning libft object files...$(RESET)"
 	@rm -f $(OBJ)
+	@echo "$(BLUE)Cleaning ft_printf...$(RESET)"
 	@make -s -C $(FT_PRINTF_DIR) clean
-	@echo "CLEANED !"
+	@echo "$(GREEN)libft CLEANED!$(RESET)"
 
-fclean: clean
-	@echo "Removing executables..."
+# Full cleanup
+fclean:
+	@echo "$(BLUE)Cleaning libft object files...$(RESET)"
+	@rm -f $(OBJ)
+	@echo "$(BLUE)Removing libft archive...$(RESET)"
 	@rm -f $(NAME)
+	@echo "$(BLUE)Cleaning ft_printf archive...$(RESET)"
 	@make -s -C $(FT_PRINTF_DIR) fclean
-	@echo "exec CLEANED !"
+	@echo "$(GREEN)libft FCLEANED!$(RESET)"
 
 re: fclean all
 
-.PHONY:	all clean fclean re bonus
+.PHONY: all clean fclean re bonus
+
