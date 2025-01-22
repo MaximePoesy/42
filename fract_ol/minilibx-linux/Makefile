@@ -1,22 +1,65 @@
-##
-## Makefile for MiniLibX in /home/boulon/work/c/raytraceur/minilibx
-## 
-## Made by Olivier Crouzet
-## Login   <ol@epitech.net>
-## 
-## Started on  Tue Oct  5 15:56:43 2004 Olivier Crouzet
-## Last update Tue May 15 15:44:41 2007 Olivier Crouzet
-##
-
-## Please use configure script
+# Define color codes
+RED = \033[31m
+GREEN = \033[32m
+YELLOW = \033[33m
+BLUE = \033[34m
+MAGENTA = \033[35m
+CYAN = \033[36m
+RESET = \033[0m
 
 
-all	: do_configure
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -I. -Iminilibx-linux -Ilibft
+LDFLAGS = -Lminilibx-linux -lmlx -lm -lX11 -lXext -Llibft -lft
+SRC = fract_ol.c
+OBJ = $(SRC:.c=.o)
+NAME = fractol
 
-do_configure	:
-	./configure
+MLX_DIR = minilibx-linux
+LIBFT_DIR = libft
 
-clean	:
-	./configure clean
+all: $(NAME)
 
-re	: clean all
+$(MLX_DIR)/libmlx.a:
+	@echo "$(BLUE)Compiling MinilibX...$(RESET)"
+	@cd $(MLX_DIR) && make -s && cd ..
+	@echo "$(GREEN)MinilibX COMPILED!$(RESET)"
+
+$(LIBFT_DIR)/libft.a:
+	@echo "$(BLUE)Compiling libft...$(RESET)"
+	@cd $(LIBFT_DIR) && make -s && cd ..
+	@echo "$(GREEN)libft COMPILED!$(RESET)"
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(OBJ) $(MLX_DIR)/libmlx.a $(LIBFT_DIR)/libft.a
+	@echo "$(BLUE)Linking the project...$(RESET)"
+	@$(CC) $(OBJ) -o $(NAME) $(LDFLAGS)
+	@echo "$(GREEN)Project LINKED!$(RESET)"
+
+clean:
+	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
+	@rm -f $(OBJ)
+	@echo "$(GREEN)fractol object files CLEANED!$(RESET)"
+	@echo "$(BLUE)Cleaning MiniLibX object files...$(RESET)"
+	@make -s -C $(MLX_DIR) clean
+	@echo "$(GREEN)MinilibX object files CLEANED!$(RESET)"
+	@echo "$(BLUE)Cleaning libft object files...$(RESET)"
+	@make -s -C $(LIBFT_DIR) clean
+	@ECHO "$(GREEN)libft object files CLEANED!$(RESET)"
+	@echo "$(GREEN)fract_ol CLEANED!$(RESET)"
+
+fclean:
+	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
+	@rm -f $(OBJ)
+	@echo "$(GREEN)fractol object files CLEANED!$(RESET)"
+	@echo "$(BLUE)Removing libft archive...$(RESET)"
+	@make -s -C $(LIBFT_DIR) fclean
+	@echo "$(GREEN)libft archive REMOVED!$(RESET)"
+	@echo "$(BLUE)Removing fractol executable...$(RESET)"
+	@rm -f $(NAME)
+	@echo "$(GREEN)fractol exectuable REMOVED!$(RESET)"
+	@echo "$(GREEN)fract_ol FCLEANED!$(RESET)"
+
+re: clean all
