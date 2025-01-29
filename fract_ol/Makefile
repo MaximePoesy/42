@@ -11,7 +11,23 @@ RESET = \033[0m
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I. -Iminilibx-linux -Ilibft
 LDFLAGS = -Lminilibx-linux -lmlx -lm -lX11 -lXext -Llibft -lft
-SRC = fract_ol.c
+SRC = 	fract_ol.c \
+	color/color_shift.c \
+	color/create_color.c \
+	color/precompute.c \
+	hook/key_hook.c \
+	hook/mouse_hook.c \
+	libx_utils/free.c \
+	libx_utils/init.c \
+	other/abs.c \
+	other/check_set.c \
+	other/data_setup.c \
+	other/menu.c \
+	pixel/burning_ship.c \
+	pixel/display.c \
+	pixel/julia.c \
+	pixel/mandelbrot.c \
+	pixel/zoom.c
 OBJ = $(SRC:.c=.o)
 NAME = fractol
 
@@ -47,13 +63,16 @@ clean:
 	@echo "$(GREEN)MinilibX object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Cleaning libft object files...$(RESET)"
 	@make -s -C $(LIBFT_DIR) clean
-	@ECHO "$(GREEN)libft object files CLEANED!$(RESET)"
+	@echo "$(GREEN)libft object files CLEANED!$(RESET)"
 	@echo "$(GREEN)fract_ol CLEANED!$(RESET)"
 
 fclean:
 	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
 	@rm -f $(OBJ)
 	@echo "$(GREEN)fractol object files CLEANED!$(RESET)"
+	@echo "$(BLUE)Cleaning MiniLibX object files...$(RESET)"
+	@make -s -C $(MLX_DIR) clean
+	@echo "$(GREEN)MinilibX object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Removing libft archive...$(RESET)"
 	@make -s -C $(LIBFT_DIR) fclean
 	@echo "$(GREEN)libft archive REMOVED!$(RESET)"
@@ -62,4 +81,6 @@ fclean:
 	@echo "$(GREEN)fractol exectuable REMOVED!$(RESET)"
 	@echo "$(GREEN)fract_ol FCLEANED!$(RESET)"
 
-re: clean all
+re: fclean all
+
+.phony : clean fclean re

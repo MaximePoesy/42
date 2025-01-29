@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:27:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/22 10:52:12 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/01/28 16:08:51 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,20 @@ typedef struct s_display
 	int			index;
 }				t_display;
 
+int				color_shift(t_data *data);
+int				create_color(double smooth_iteration);
+void			precompute_colors(t_data *data);
+int				key_hook(int keycode, t_data *data);
+int				mouse_hook(int button, int x, int y, t_data *data);
+int				close_window(t_data *data);
+void			init_window(t_data *data, int width, int height, char *title);
+double			abs_value(double n);
+int				check_set(int argc, char **argv);
+void			data_setup(t_data *data, int julia, char *argv2, char *argv3);
+void			show_menu(void);
+int				burn(double x, double y, t_data *data);
+void			pixel_display(t_data *data);
+int				julia(double re, double im, t_data *data);
+int				mand(double re, double im, t_data *data);
+void			zoom(t_data *data, int x, int y, double factor);
 #endif
