@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:27:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/28 16:08:51 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/02/21 17:00:54 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 # define KEY_DOWN 65364
 # define KEY_UP 65362
 # define MOVE_SPEED 0.1
+
+# define FRAME_COUNT 5000
+# define HEIGHT 700
+# define WIDTH 700
 
 # ifndef ITERATIONS_MAX
 #  define ITERATIONS_MAX 500

@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 14:12:21 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/28 14:23:23 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/02/21 16:59:37 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	color_shift(t_data *data)
 {
 	static int	frame_count = 0;
 
-	if (++frame_count > 6000)
+	if (++frame_count > FRAME_COUNT && data->julia == 1)
 	{
 		frame_count = 0;
 		data->color_shift = (data->color_shift + 1) % ITERATIONS_MAX;

@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:11:45 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/01/28 14:17:05 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/02/21 16:56:29 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv)
 
 	if (check_set(argc, argv))
 		return (0);
-	init_window(&data, 500, 500, "fract_ol");
+	init_window(&data, WIDTH, HEIGHT, "fract_ol");
 	if (!ft_strcmp(argv[1], "-j"))
 		fractal_type = 1;
 	else if (!ft_strcmp(argv[1], "-m"))

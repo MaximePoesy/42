@@ -57,28 +57,21 @@ $(NAME): $(OBJ) $(MLX_DIR)/libmlx.a $(LIBFT_DIR)/libft.a
 clean:
 	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
 	@rm -f $(OBJ)
-	@echo "$(GREEN)fractol object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Cleaning MiniLibX object files...$(RESET)"
 	@make -s -C $(MLX_DIR) clean
-	@echo "$(GREEN)MinilibX object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Cleaning libft object files...$(RESET)"
 	@make -s -C $(LIBFT_DIR) clean
-	@echo "$(GREEN)libft object files CLEANED!$(RESET)"
 	@echo "$(GREEN)fract_ol CLEANED!$(RESET)"
 
 fclean:
 	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
 	@rm -f $(OBJ)
-	@echo "$(GREEN)fractol object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Cleaning MiniLibX object files...$(RESET)"
 	@make -s -C $(MLX_DIR) clean
-	@echo "$(GREEN)MinilibX object files CLEANED!$(RESET)"
 	@echo "$(BLUE)Removing libft archive...$(RESET)"
 	@make -s -C $(LIBFT_DIR) fclean
-	@echo "$(GREEN)libft archive REMOVED!$(RESET)"
 	@echo "$(BLUE)Removing fractol executable...$(RESET)"
 	@rm -f $(NAME)
-	@echo "$(GREEN)fractol exectuable REMOVED!$(RESET)"
 	@echo "$(GREEN)fract_ol FCLEANED!$(RESET)"
 
 re: fclean all
