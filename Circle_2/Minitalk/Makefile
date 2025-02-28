@@ -7,7 +7,7 @@ YELLOW = \033[33m
 NAME_1 = server
 NAME_2 = client
 
-SRCS_SERVER = server.c
+SRCS_SERVER = server.c server_util.c
 SRCS_CLIENT = client.c
 
 OBJS_SERVER = $(SRCS_SERVER:.c=.o)

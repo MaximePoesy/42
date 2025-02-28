@@ -5,15 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 11:15:17 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/02/21 11:07:44 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/02/28 12:10:49 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/02/28 12:10:52 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "minitalk.h"
 
 void	send_signal(pid_t pid, char bit)
 {
@@ -21,31 +18,33 @@ void	send_signal(pid_t pid, char bit)
 		kill(pid, SIGUSR2);
 	else
 		kill(pid, SIGUSR1);
-	usleep(200);
+	usleep(300);
+}
+
+static void	send_bits(pid_t pid, unsigned long value, int nbits)
+{
+	int	i;
+
+	i = nbits - 1;
+	while (i >= 0)
+	{
+		send_signal(pid, (value >> i) & 1);
+		i--;
+	}
 }
 
 void	send_message(pid_t pid, const char *message)
 {
-	int	i;
-	int	j;
+	size_t	msg_length;
 
+	msg_length = ft_strlen(message) + 1;
+	send_bits(pid, msg_length, 32);
 	while (*message)
 	{
-		j = 7;
-		while (j >= 0)
-		{
-			send_signal(pid, (*message >> j) & 1);
-			j--;
-		}
+		send_bits(pid, (unsigned long)*message, 8);
 		message++;
 	}
-	i = 0;
-	while (i < 8)
-	{
-		send_signal(pid, 0);
-		i++;
-	}
-	pause();
+	send_bits(pid, 0, 8);
 }
 
 void	receive_message(int signo, siginfo_t *info, void *context)
