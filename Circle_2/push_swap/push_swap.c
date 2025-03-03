@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:50:24 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/02/24 17:16:06 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/03 14:52:05 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,25 +93,14 @@ int	main(void)
 	init_stack(&a);
 	init_stack(&b);
 	push(&a, 1);
-	push(&a, 2);
+	push(&a, 5);
 	push(&a, 3);
-	push(&b, 1);
-	push(&b, 2);
-	push(&b, 3);
+	push(&a, 9);
+	push(&a, 2);
+	push(&a, 8);
 	display(&a, &b);
-	rra(&a);
-	display(&a, &b);
-	rra(&a);
-	display(&a, &b);
-	rra(&a);
-	display(&a, &b);
-	rrb(&b);
-	display(&a, &b);
-	rb(&b);
-	display(&a, &b);
-	rrr(&a, &b);
-	display(&a, &b);
-	rr(&a, &b);
+	sort(&a, &b);
+	printf("---------- FINAL STACK ! ----------\n\n");
 	display(&a, &b);
 	free_stack(&a);
 	free_stack(&b);

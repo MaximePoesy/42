@@ -6,11 +6,11 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:52:54 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/02/24 17:09:55 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/03 17:20:18 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../push_swap.h"
 
 // rra (reverse rotate a): Shift down all elements of stack a by 1.
 // The last element becomes the first one.
@@ -20,7 +20,7 @@ void	rra(t_stack *a)
 	t_node	*last;
 	t_node	*before_last;
 
-	if (!a || !a->top)
+	if (!a || !a->top || !a->top->next)
 		return ;
 	before_last = a->top;
 	while (before_last->next->next)
@@ -39,7 +39,7 @@ void	rrb(t_stack *b)
 	t_node	*last;
 	t_node	*before_last;
 
-	if (!b || !b->top)
+	if (!b || !b->top || !b->top->next)
 		return ;
 	before_last = b->top;
 	while (before_last->next->next)
