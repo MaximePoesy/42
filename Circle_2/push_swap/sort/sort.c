@@ -42,68 +42,18 @@ int	pushtob(t_stack *a, t_stack *b)
 	return (count);
 }
 
-int	find_min_value(t_stack *b, int ignore_value)
-{
-	t_node	*current;
-	int		min_value;
-
-	min_value = __INT_MAX__;
-	current = b->top;
-	while (current)
-	{
-		if (current->data < min_value && current->data > ignore_value)
-			min_value = current->data;
-		current = current->next;
-	}
-	return (min_value);
-}
-
-int	find_min_index(t_stack *b, int rank)
-{
-	t_node	*current;
-	int		min_value;
-	int		index;
-	int		k;
-
-	min_value = -__INT_MAX__;
-	k = 0;
-	while (k <= rank)
-	{
-		min_value = find_min_value(b, min_value);
-		current = b->top;
-		index = 0;
-		while (current)
-		{
-			if (current->data == min_value)
-				break ;
-			current = current->next;
-			index++;
-		}
-		k++;
-	}
-	return (index);
-}
-
 void	sort(t_stack *a, t_stack *b)
 {
 	int	num;
 	int	min_index;
 	int	size_b;
-	int	min_rank;
 
 	num = pushtob(a, b);
-	min_rank = 0;
 	while (stack_size(b) != 0)
 	{
 		size_b = stack_size(b);
-		min_index = find_min_index(b, min_rank);
-		if (is_in_middle(min_index, size_b))
-		{
-			min_rank++;
-			continue ;
-		}
+		min_index = find_min_index(b);
 		rotate_b(b, a, min_index, size_b);
-		adjust_a(a, b, min_rank);
-		min_rank = 0;
+		adjust_a(a, b);
 	}
 }

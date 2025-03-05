@@ -47,14 +47,37 @@ int	is_in_middle(int index, int size)
 	return (0);
 }
 
-void	rotate_to_rank(t_stack *a, t_stack *b, int rank, int stack_size_a)
+int	find_insertion_index(t_stack *a, int value)
 {
+	t_node	*cur;
+	int		index;
+
+	if (!a || !a->top)
+		return (0);
+	if (value < a->top->data)
+		return (0);
+	cur = a->top;
+	index = 0;
+	while (cur->next)
+	{
+		if (cur->data <= value && cur->next->data >= value)
+			return (index + 1);
+		index++;
+		cur = cur->next;
+	}
+	return (index + 1);
+}
+
+void	rotate_a_to_index(t_stack *a, t_stack *b, int insertion_index)
+{
+	int	size_a;
 	int	i;
 
-	if (rank < stack_size_a / 2)
+	size_a = stack_size(a);
+	i = 0;
+	if (insertion_index <= (size_a / 2))
 	{
-		i = 0;
-		while (i < rank)
+		while (i < insertion_index)
 		{
 			ra(a);
 			write(1, "ra\n", 3);
@@ -65,7 +88,7 @@ void	rotate_to_rank(t_stack *a, t_stack *b, int rank, int stack_size_a)
 	else
 	{
 		i = 0;
-		while (i < (stack_size_a - rank))
+		while (i < (size_a - insertion_index))
 		{
 			rra(a);
 			write(1, "rra\n", 4);
@@ -75,39 +98,46 @@ void	rotate_to_rank(t_stack *a, t_stack *b, int rank, int stack_size_a)
 	}
 }
 
-void    undo_rotation(t_stack *a, t_stack *b, int rank, int stack_size_a)
+void	undo_a_rotation(t_stack *a, t_stack *b, int insertion_index)
 {
-        int     i;
+	int	size_a;
+	int	i;
 
-        if (rank < stack_size_a / 2)
-        {
-                i = 0;
-                while (i < rank)
-                {
-                        rra(a);
-                        write(1, "rra\n", 4);
-                        display(a, b);
-                        i++;
-                }
-        }
-        else
-        {
-                i = 0;
-                while (i < (stack_size_a - rank))
-                {
-                        ra(a);
-                        write(1, "ra\n", 3);
-                        display(a, b);
-                        i++;
-                }
-        }
+	size_a = stack_size(a);
+	i = 0;
+	if (insertion_index <= (size_a - 1) / 2)
+	{
+		while (i < insertion_index + 1)
+		{
+			rra(a);
+			write(1, "rra\n", 4);
+			display(a, b);
+			i++;
+		}
+	}
+	else
+	{
+		i = 0;
+		while (i < (size_a - 1 - insertion_index) + 1)
+		{
+			ra(a);
+			write(1, "ra\n", 3);
+			display(a, b);
+			i++;
+		}
+	}
 }
 
-void	adjust_a(t_stack *a, t_stack *b, int rank)
+void	adjust_a(t_stack *a, t_stack *b)
 {
-	rotate_to_rank(a, b, rank, stack_size(a));
+	int	insertion_index;
+	int	value;
+
+	value = b->top->data;
+	insertion_index = find_insertion_index(a, value);
+	rotate_a_to_index(a, b, insertion_index);
 	pa(a, b);
 	write(1, "pa\n", 3);
 	display(a, b);
-	undo_rotation(a, b, rank, stack_size(a));
+	undo_a_rotation(a, b, insertion_index);
 }
