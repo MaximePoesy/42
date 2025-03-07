@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:50:24 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/03/03 14:52:05 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/07 15:45:33 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,21 +87,23 @@ void	free_stack(t_stack *s)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	t_stack a, b;
+	t_stack	a;
+	t_stack	b;
+
 	init_stack(&a);
 	init_stack(&b);
-	push(&a, 1);
-	push(&a, 5);
-	push(&a, 3);
-	push(&a, 9);
-	push(&a, 2);
-	push(&a, 8);
-	display(&a, &b);
-	sort(&a, &b);
-	printf("---------- FINAL STACK ! ----------\n\n");
-	display(&a, &b);
+	if (!parse_args(argc, argv, &a))
+	{
+		write(2, "Error\n", 6);
+		free_stack(&a);
+		free_stack(&b);
+		return (0);
+	}
+	if (isnt_sorted(&a))
+		sort(&a, &b);
+	//display(&a, &b);
 	free_stack(&a);
 	free_stack(&b);
 	return (0);

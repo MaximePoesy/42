@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:48:56 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/03/05 18:31:55 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/07 14:32:14 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include "libft/libft.h"
+
+# define INT_MAX 2147483647
+# define INT_MIN (-2147483648)
 
 typedef struct s_node
 {
@@ -27,6 +31,16 @@ typedef struct s_stack
 {
 	t_node			*top;
 }					t_stack;
+
+typedef struct s_move
+{
+	int	candidate_index;
+	int	insertion_index;
+	int	rotations_a;
+	int	rotations_b;
+	int	rotations_ab;
+	int	total_cost;
+}			t_move;
 
 void				sa(t_stack *a);
 void				sb(t_stack *b);
@@ -40,11 +54,15 @@ void				rra(t_stack *a);
 void				rrb(t_stack *b);
 void				rrr(t_stack *a, t_stack *b);
 void				sort(t_stack *a, t_stack *b);
-int					find_min_index(t_stack *b);
 int					pushtob(t_stack *a, t_stack *b);
 int					stack_size(t_stack *stack);
-void				adjust_a(t_stack *a, t_stack *b);
-int					is_in_middle(int index, int size);
-void				rotate_b(t_stack *b, t_stack *a, int index, int size);
 void				display(t_stack *a, t_stack *b);
+t_move  calculate_move(t_stack *a, t_stack *b, int candidate_index);
+int     find_best_candidate(t_stack *b, t_stack *a);
+void    double_rotate(t_move move, t_stack *a, t_stack *b);
+void    rotate_b_individual(t_move move, t_stack *b);
+int     get_value_at_index(t_stack *stack, int index);
+int     find_insertion_index(t_stack *a, int value);
+int					parse_args(int argc, char **argv, t_stack *stack);
+int	isnt_sorted(t_stack *a);
 #endif

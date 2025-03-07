@@ -6,44 +6,28 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 13:52:26 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/03/03 17:41:02 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/07 15:45:13 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void	rotate_b(t_stack *b, t_stack *a, int index, int size)
+int	get_value_at_index(t_stack *stack, int index)
 {
-	if (index <= size / 2)
-	{
-		while (index > 0)
-		{
-			rb(b);
-			write(1, "rb\n", 3);
-			display(a, b);
-			index--;
-		}
-	}
-	else
-	{
-		index = size - index;
-		while (index > 0)
-		{
-			rrb(b);
-			write(1, "rrb\n", 3);
-			display(a, b);
-			index--;
-		}
-	}
-}
+	t_node	*current;
+	int		i;
 
-int	is_in_middle(int index, int size)
-{
-	int	threshold;
-
-	threshold = size / 5;
-	if (index >= threshold && index < size - threshold)
-		return (1);
+	if (!stack || !stack->top)
+		return (0);
+	current = stack->top;
+	i = 0;
+	while (current && i < index)
+	{
+		current = current->next;
+		i++;
+	}
+	if (current)
+		return (current->data);
 	return (0);
 }
 
@@ -62,82 +46,154 @@ int	find_insertion_index(t_stack *a, int value)
 	{
 		if (cur->data <= value && cur->next->data >= value)
 			return (index + 1);
-		index++;
 		cur = cur->next;
+		index++;
 	}
 	return (index + 1);
 }
 
-void	rotate_a_to_index(t_stack *a, t_stack *b, int insertion_index)
+int	is_in_middle(int index, int size)
 {
-	int	size_a;
-	int	i;
+	int	threshold;
+
+	threshold = size / 5;
+	if (index >= threshold && index < size - threshold)
+		return (1);
+	return (0);
+}
+
+/* calculate_move computes candidate and insertion indexes, rotations and cost */
+t_move	calculate_move(t_stack *a, t_stack *b, int candidate_index)
+{
+	t_move	move;
+	int		size_a;
+	int		size_b;
+	int		candidate_value;
 
 	size_a = stack_size(a);
-	i = 0;
-	if (insertion_index <= (size_a / 2))
+	size_b = stack_size(b);
+	candidate_value = get_value_at_index(b, candidate_index);
+	move.candidate_index = candidate_index;
+	move.insertion_index = find_insertion_index(a, candidate_value);
+
+	if (candidate_index <= size_b / 2)
+		move.rotations_b = candidate_index;
+	else
+		move.rotations_b = size_b - candidate_index;
+
+	if (move.insertion_index <= size_a / 2)
+		move.rotations_a = move.insertion_index;
+	else
+		move.rotations_a = size_a - move.insertion_index;
+
+	if ((candidate_index <= size_b / 2 && move.insertion_index <= size_a / 2) || (candidate_index > size_b / 2 && move.insertion_index > size_a / 2))
 	{
-		while (i < insertion_index)
+		if (move.rotations_a > move.rotations_b)
 		{
-			ra(a);
-			write(1, "ra\n", 3);
-			display(a, b);
-			i++;
+			move.rotations_ab = move.rotations_b;
+			move.rotations_a -= move.rotations_ab;
+			move.rotations_b -= move.rotations_ab;
+			move.total_cost = move.rotations_a + move.rotations_ab;
+		}
+		else
+		{
+			move.rotations_ab = move.rotations_a;
+			move.rotations_a -= move.rotations_ab;
+                        move.rotations_b -= move.rotations_ab;
+			move.total_cost = move.rotations_b + move.rotations_ab;
+		}
+	}
+	else
+		move.total_cost = move.rotations_a + move.rotations_b;
+	return (move);
+}
+
+/* find_best_candidate scans B for the candidate with minimal cost */
+int	find_best_candidate(t_stack *b, t_stack *a)
+{
+	int		i;
+	int		size_b;
+	int		best_index;
+	t_move	move;
+	t_move	best_move;
+
+	size_b = stack_size(b);
+	i = 0;
+	best_move.total_cost = -1;
+	best_index = 0;
+	//display(a, b);
+	while (i < size_b)
+	{
+		move = calculate_move(a, b, i);
+		/*
+		printf("move.candidate_index : %d\n", move.candidate_index);
+		printf("actual value : %d\n", get_value_at_index(b, move.candidate_index));
+		printf("move.insertion_index : %d\n", move.insertion_index);
+		printf("move.rotations_a : %d\n", move.rotations_a);
+		printf("move.rotations_b : %d\n", move.rotations_b);
+		printf("move.rotations_ab : %d\n", move.rotations_ab);
+		printf("move.total_cost : %d\n\n", move.total_cost);
+		*/
+		if (best_move.total_cost == -1 || move.total_cost < best_move.total_cost)
+		{
+			best_move = move;
+			best_index = i;
+		}
+		i++;
+	}
+	return (best_index);
+}
+
+/* double_rotate performs combined rotations on A and B as long as possible */
+void    double_rotate(t_move move, t_stack *a, t_stack *b)
+{
+        int     size_a;
+        int     i;
+
+        size_a = stack_size(a);
+	i = move.rotations_ab;
+	while (i > 0)
+        {
+		if (move.insertion_index <= size_a / 2)
+		{
+                	rr(a, b);
+                	write(1, "rr\n", 3);
+		}
+		else
+		{
+			rrr(a, b);
+                        write(1, "rrr\n", 4);
+		}
+                i--;
+        }
+}
+
+/* rotate_b_individual rotates B individually to bring the candidate to top */
+void	rotate_b_individual(t_move move, t_stack *b)
+{
+	int	size_b;
+	int	i;
+
+	size_b = stack_size(b);
+	if (move.candidate_index <= size_b / 2)
+	{
+		i = move.rotations_b;
+		while (i > 0)
+		{
+			rb(b);
+			write(1, "rb\n", 3);
+			i--;
 		}
 	}
 	else
 	{
-		i = 0;
-		while (i < (size_a - insertion_index))
+		i = move.rotations_b;
+		while (i > 0)
 		{
-			rra(a);
-			write(1, "rra\n", 4);
-			display(a, b);
-			i++;
+			rrb(b);
+			write(1, "rrb\n", 3);
+			i--;
 		}
 	}
 }
 
-void	undo_a_rotation(t_stack *a, t_stack *b, int insertion_index)
-{
-	int	size_a;
-	int	i;
-
-	size_a = stack_size(a);
-	i = 0;
-	if (insertion_index <= (size_a - 1) / 2)
-	{
-		while (i < insertion_index + 1)
-		{
-			rra(a);
-			write(1, "rra\n", 4);
-			display(a, b);
-			i++;
-		}
-	}
-	else
-	{
-		i = 0;
-		while (i < (size_a - 1 - insertion_index) + 1)
-		{
-			ra(a);
-			write(1, "ra\n", 3);
-			display(a, b);
-			i++;
-		}
-	}
-}
-
-void	adjust_a(t_stack *a, t_stack *b)
-{
-	int	insertion_index;
-	int	value;
-
-	value = b->top->data;
-	insertion_index = find_insertion_index(a, value);
-	rotate_a_to_index(a, b, insertion_index);
-	pa(a, b);
-	write(1, "pa\n", 3);
-	display(a, b);
-	undo_a_rotation(a, b, insertion_index);
-}
