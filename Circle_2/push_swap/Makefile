@@ -18,6 +18,12 @@ SRC = 	push_swap.c \
 	operations/operations_c.c \
 	sort/sort.c \
 	sort/sort_two.c \
+	sort/sortatob/calculate_move_atob.c \
+	sort/sortatob/find_best_candidate_atob.c \
+	sort/sortatob/pushtob.c \
+	sort/sortbtoa/calculate_move_btoa.c \
+	sort/sortbtoa/find_best_candidate_btoa.c \
+	sort/sortbtoa/pushtoa.c \
 	isnt_sorted.c
 
 OBJ = $(SRC:.c=.o)

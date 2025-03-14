@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:50:24 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/03/07 15:45:33 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/13 12:20:43 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	main(int argc, char **argv)
 	}
 	if (isnt_sorted(&a))
 		sort(&a, &b);
-	//display(&a, &b);
+	display(&a, &b);
 	free_stack(&a);
 	free_stack(&b);
 	return (0);

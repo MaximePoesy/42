@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 13:48:56 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/03/07 14:32:14 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/03/13 14:41:53 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,25 @@ void				rra(t_stack *a);
 void				rrb(t_stack *b);
 void				rrr(t_stack *a, t_stack *b);
 void				sort(t_stack *a, t_stack *b);
-int					pushtob(t_stack *a, t_stack *b);
+void					pushtob(t_stack *a, t_stack *b);
 int					stack_size(t_stack *stack);
 void				display(t_stack *a, t_stack *b);
 t_move  calculate_move(t_stack *a, t_stack *b, int candidate_index);
-int     find_best_candidate(t_stack *b, t_stack *a);
+t_move     find_best_candidate(t_stack *b, t_stack *a);
 void    double_rotate(t_move move, t_stack *a, t_stack *b);
 void    rotate_b_individual(t_move move, t_stack *b);
 int     get_value_at_index(t_stack *stack, int index);
 int     find_insertion_index(t_stack *a, int value);
 int					parse_args(int argc, char **argv, t_stack *stack);
 int	isnt_sorted(t_stack *a);
+void    execute_best_move_atob(t_stack *a, t_stack *b, t_move move);
+void    execute_best_move_btoa(t_stack *a, t_stack *b, t_move move);
+t_move	find_best_candidate_atob(t_stack *b, t_stack *a);
+t_move	find_best_candidate_btoa(t_stack *b, t_stack *a);
+t_move	calculate_move_btoa(t_stack *a, t_stack *b, int candidate_index);
+t_move	calculate_move_atob(t_stack *a, t_stack *b, int candidate_index);
+void	pushtob(t_stack *a, t_stack *b);
+void	pushtoa(t_stack *a, t_stack *b);
+void	rotate_a_individual(t_move move, t_stack *a);
+void    rotate_a_back(t_move move, t_stack *a);
 #endif
