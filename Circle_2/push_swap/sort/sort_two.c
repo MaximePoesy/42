@@ -60,14 +60,16 @@ void    double_rotate(t_move move, t_stack *a, t_stack *b)
 }
 
 /* rotate_b_individual rotates B individually to bring the candidate to top */
-void	rotate_b_individual(t_move move, t_stack *b)
+int	rotate_b_individual(t_move move, t_stack *b)
 {
 	int	size_b;
 	int	i;
+	int	rota_back;
 
 	size_b = stack_size(b);
 	if (move.candidate_index <= size_b / 2)
 	{
+		rota_back = move.rotations_b;
 		i = move.rotations_b;
 		while (i > 0)
 		{
@@ -77,6 +79,7 @@ void	rotate_b_individual(t_move move, t_stack *b)
 	}
 	else
 	{
+		rota_back = -move.rotations_b;
 		i = move.rotations_b;
 		while (i > 0)
 		{
@@ -84,5 +87,6 @@ void	rotate_b_individual(t_move move, t_stack *b)
 			i--;
 		}
 	}
+	return (rota_back);
 }
 

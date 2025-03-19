@@ -67,23 +67,28 @@ void    rotate_b_back(t_move move, t_stack *b)
 }
 
 /* execute_best_move combines all rotations and pushes the candidate from B to A */
-void	execute_best_move_atob(t_stack *a, t_stack *b, t_move move)
+int	execute_best_move_atob(t_stack *a, t_stack *b, t_move move)
 {
-	double_rotate(move, a, b);
-	rotate_a_individual(move, b);
-	rotate_b_individual(move, a);
-	pa(a, b); 
-	rotate_b_back(move, a);
+	int	rota_back;
+
+	//double_rotate(move, a, b);
+	rota_back = rotate_b_individual(move, b);
+	rotate_a_individual(move, a);
+	pb(a, b); 
+	return (rota_back);
 }
 
-void	pushtob(t_stack *a, t_stack *b)
+int	pushtob(t_stack *a, t_stack *b)
 {
 	t_move     best_candidate;
+	int	rota_back;
 
-	while (stack_size(a) > 3)
+	rota_back = 0;
+	while (stack_size(a) > 1)
 	{
 		best_candidate = find_best_candidate_atob(b, a);
-                execute_best_move_atob(a, b, best_candidate);
+                rota_back += execute_best_move_atob(a, b, best_candidate);
 	}
-	sort_three(a);
+	//sort_three(a);
+	return(rota_back);
 }

@@ -44,17 +44,18 @@ t_move	calculate_move_atob(t_stack *a, t_stack *b, int candidate_index)
 
 	size_a = stack_size(a);
 	size_b = stack_size(b);
-	candidate_value = get_value_at_index(b, candidate_index);
+	candidate_value = get_value_at_index(a, candidate_index);
 	move.candidate_index = candidate_index;
-	move.insertion_index = find_insertion_index_atob(a, candidate_value);
-	if (candidate_index <= size_b / 2)
-		move.rotations_b = candidate_index;
+	move.insertion_index = find_insertion_index_atob(b, candidate_value);
+	if (candidate_index <= size_a / 2)
+		move.rotations_a = candidate_index;
 	else
-		move.rotations_b = size_b - candidate_index;
-	if (move.insertion_index <= size_a / 2)
-		move.rotations_a = move.insertion_index;
+		move.rotations_a = size_a - candidate_index;
+	if (move.insertion_index <= size_b / 2)
+		move.rotations_b = move.insertion_index;
 	else
-		move.rotations_a = size_a - move.insertion_index;
+		move.rotations_b = size_b - move.insertion_index;
+	/*
 	if ((candidate_index <= size_b / 2 && move.insertion_index <= size_a / 2)
 		|| (candidate_index > size_b / 2 && move.insertion_index > size_a / 2))
 	{
@@ -78,6 +79,8 @@ t_move	calculate_move_atob(t_stack *a, t_stack *b, int candidate_index)
 		move.rotations_ab = 0;
 		move.total_cost = move.rotations_a + move.rotations_b;
 	}
+	*/
+	move.total_cost = move.rotations_a + move.rotations_b;
 	/*
 	printf("a : %d - b : %d - ab : %d", move.rotations_a, move.rotations_b, move.rotations_ab);
 	pause();

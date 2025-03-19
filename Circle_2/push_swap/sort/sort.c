@@ -29,14 +29,16 @@ int	stack_size(t_stack *stack)
 }
 
 /* rotate_a_individual rotates A individually to bring the insertion position to top */
-void	rotate_a_individual(t_move move, t_stack *a)
+int	rotate_a_individual(t_move move, t_stack *a)
 {
 	int	size_a;
 	int	i;
+	int	rota_back;
 
 	size_a = stack_size(a);
 	if (move.insertion_index <= size_a / 2)
 	{
+		rota_back = move.rotations_a;
 		i = move.rotations_a;
 		while (i > 0)
 		{
@@ -46,6 +48,7 @@ void	rotate_a_individual(t_move move, t_stack *a)
 	}
 	else
 	{
+		rota_back = -move.rotations_a;
 		i = move.rotations_a;
 		while (i > 0)
 		{
@@ -53,6 +56,7 @@ void	rotate_a_individual(t_move move, t_stack *a)
 			i--;
 		}
 	}
+	return (rota_back);
 }
 
 /* rotate_a_individual rotates A individually to bring the insertion position to top */

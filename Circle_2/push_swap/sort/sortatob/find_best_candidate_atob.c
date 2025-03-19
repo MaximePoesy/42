@@ -17,14 +17,12 @@ t_move	find_best_candidate_atob(t_stack *b, t_stack *a)
 {
 	int		i;
 	int		size;
-	int		best_index;
 	t_move	move;
 	t_move	best_move;
 
 	size = stack_size(a);
 	i = 0;
 	best_move.total_cost = -1;
-	best_index = 0;
 	display(a, b);
 	while (i < size)
 	{
@@ -39,10 +37,7 @@ t_move	find_best_candidate_atob(t_stack *b, t_stack *a)
 		printf("move.total_cost : %d\n\n", move.total_cost);
 		
 		if (best_move.total_cost == -1 || move.total_cost < best_move.total_cost)
-		{
 			best_move = move;
-			best_index = i;
-		}
 		i++;
 	}
 	return (best_move);
