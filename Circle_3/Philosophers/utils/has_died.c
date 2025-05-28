@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   timestamp.c                                        :+:      :+:    :+:   */
+/*   has_died.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 17:11:25 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/05/28 13:35:03 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/05/28 14:59:51 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/05/28 15:00:22 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philosophers.h"
 
-void	init_timestamp(struct timeval *start_time)
+int	has_died(t_shared *shared)
 {
-	gettimeofday(start_time, NULL);
+	int	stop;
+
+	pthread_mutex_lock(&shared->stop_lock);
+	stop = shared->stop_simulation;
+	pthread_mutex_unlock(&shared->stop_lock);
+	return (stop);
 }
 
-long	ts(struct timeval start)
+void	set_stop(t_shared *shared)
 {
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start.tv_sec) * 1000L + (now.tv_usec - start.tv_usec)
-		/ 1000L);
+	pthread_mutex_lock(&shared->stop_lock);
+	shared->stop_simulation = 1;
+	pthread_mutex_unlock(&shared->stop_lock);
 }

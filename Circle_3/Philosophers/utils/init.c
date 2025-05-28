@@ -1,50 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 10:54:03 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/05/28 12:06:15 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/05/28 09:48:26 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/05/28 17:34:22 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philosophers.h"
 
-static int	is_digit(char c)
+int	init(t_shared *shared, t_struct_args *args, t_philo *philos)
 {
-	return (c >= '0' && c <= '9');
-}
+	int	i;
 
-static int	str_to_int(const char *str)
-{
-	long	result;
-	int		i;
-
-	result = 0;
+	shared->stop_simulation = 0;
+	init_timestamp(&shared->start_time);
+	shared->args = args;
+	shared->philos = philos;
+	shared->forks = malloc(sizeof(pthread_mutex_t) * args->nb_philo);
+	if (!shared->forks)
+		return (0);
 	i = 0;
-	if (!str || !*str)
-		return (-1);
-	while (str[i])
+	while (i < args->nb_philo)
 	{
-		if (!is_digit(str[i]))
-			return (-1);
-		result = result * 10 + (str[i] - '0');
-		if (result > 2147483647)
-			return (-1);
+		pthread_mutex_init(&shared->forks[i], NULL);
 		i++;
 	}
-	return ((int)result);
-}
-
-int	valid_arg(const char *s, int *out)
-{
-	int	n;
-
-	n = str_to_int(s);
-	if (n <= 0)
-		return (0);
-	*out = n;
+	pthread_mutex_init(&shared->stop_lock, NULL);
+	pthread_mutex_init(&shared->write_lock, NULL);
 	return (1);
 }

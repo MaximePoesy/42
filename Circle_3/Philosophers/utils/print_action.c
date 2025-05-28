@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   timestamp.c                                        :+:      :+:    :+:   */
+/*   print_action.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 17:11:25 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/05/28 13:35:03 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/05/28 17:33:19 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/05/28 17:43:17 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philosophers.h"
 
-void	init_timestamp(struct timeval *start_time)
+void	print_action(t_philo *philo, char *action)
 {
-	gettimeofday(start_time, NULL);
-}
+	size_t	time;
 
-long	ts(struct timeval start)
-{
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start.tv_sec) * 1000L + (now.tv_usec - start.tv_usec)
-		/ 1000L);
+	pthread_mutex_lock(&philo->shared->write_lock);
+	time = ts(philo->shared->start_time);
+	printf("%ld %d%s\n", time, philo->id, action);
+	pthread_mutex_unlock(&philo->shared->write_lock);
 }

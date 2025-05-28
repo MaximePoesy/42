@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   timestamp.c                                        :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 17:11:25 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/05/28 13:35:03 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/05/28 10:01:31 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/05/28 10:03:02 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philosophers.h"
 
-void	init_timestamp(struct timeval *start_time)
+void	cleanup(t_struct_args *args, t_shared sharedArgs)
 {
-	gettimeofday(start_time, NULL);
-}
+	int	i;
 
-long	ts(struct timeval start)
-{
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec - start.tv_sec) * 1000L + (now.tv_usec - start.tv_usec)
-		/ 1000L);
+	i = 0;
+	while (i < args->nb_philo)
+	{
+		pthread_mutex_destroy(&sharedArgs.forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&sharedArgs.stop_lock);
+	free(sharedArgs.forks);
 }
