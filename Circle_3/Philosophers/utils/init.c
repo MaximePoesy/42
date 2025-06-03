@@ -6,7 +6,7 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 09:48:26 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/05/28 17:34:22 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/06/03 14:58:44 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	init(t_shared *shared, t_struct_args *args, t_philo *philos)
 		pthread_mutex_init(&shared->forks[i], NULL);
 		i++;
 	}
-	pthread_mutex_init(&shared->stop_lock, NULL);
 	pthread_mutex_init(&shared->write_lock, NULL);
+	pthread_mutex_init(&shared->stop_lock, NULL);
 	return (1);
 }
