@@ -6,12 +6,13 @@
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 09:19:20 by mpoesy            #+#    #+#             */
-/*   Updated: 2025/06/30 11:57:33 by mpoesy           ###   ########.fr       */
+/*   Updated: 2025/06/30 11:56:45 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include "Fixed.hpp"
+#include <cmath>
 
 const int	Fixed::nbFractionalBits = 8;
 
@@ -19,6 +20,23 @@ Fixed::Fixed()
 {
 	std::cout << "Default constructor called" << std::endl;
 	fullValue = 0;
+}
+
+Fixed::Fixed(const int value)
+{
+	std::cout << "Int constructor called" << std::endl;
+	fullValue = value << nbFractionalBits;
+}
+
+Fixed::Fixed(const float value)
+{
+	std::cout << "Float constructor called" << std::endl;
+	float	temp = value;
+	for (int i = 0; i < nbFractionalBits; i++)
+	{
+		temp *= 2;
+	}
+	fullValue = static_cast<int>(roundf(temp));
 }
 
 Fixed::~Fixed()
@@ -47,12 +65,32 @@ Fixed&	Fixed::operator=(const Fixed& other)
 // Getter
 int	Fixed::getRawBits() const
 {
-	std::cout << "getRawBits member function called" << std::endl;
-	return fullValue;
+	return (fullValue);
 }
 
 // Setter
 void	Fixed::setRawBits(int const raw)
 {
 	fullValue = raw;
+}
+
+float	Fixed::toFloat( void ) const
+{
+	float   temp = fullValue;
+        for (int i = 0; i < nbFractionalBits; i++)
+        {
+                temp /= 2;
+        }
+	return (temp);
+}
+
+int	Fixed::toInt( void ) const
+{
+	return (fullValue >> nbFractionalBits);
+}
+
+std::ostream& operator<<(std::ostream& os, const Fixed& fixed)
+{
+	os << fixed.toFloat();
+	return os;
 }
