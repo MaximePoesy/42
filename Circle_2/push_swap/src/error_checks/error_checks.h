@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   precision_s.c                                      :+:      :+:    :+:   */
+/*   error_checks.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 11:23:53 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/28 16:11:29 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/03/19 10:01:07 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/03/19 10:01:08 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../ft_printf.h"
+#ifndef ERROR_CHECKS_H
+# define ERROR_CHECKS_H
 
-char	*precision_s(char *str, t_format *format)
-{
-	size_t	len;
-	char	*new_str;
+# include <stdlib.h>
+# include <unistd.h>
+# include "../mini_strtoi/mini_strtoi.h"
+# include "../setup_stacks/setup_stacks.h"
 
-	len = ft_strlen(str);
-	if (format->precision < 0 || format->precision >= len)
-		return (ft_strdup(str));
-	new_str = ft_calloc(format->precision + 1, sizeof(char));
-	if (!new_str)
-		return (NULL);
-	ft_memcpy(new_str, str, format->precision);
-	return (new_str);
-}
+void	display_err_exit(void);
+int		ft_strcmp(const char *s1, const char *s2);
+void	check_for_int_and_overflow(int argc, char *argv[]);
+void	exit_if_duplicate(t_stack *stack_a, t_stack *stack_b);
+
+#endif /* ERROR_CHECKS_H */

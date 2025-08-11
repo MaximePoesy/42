@@ -18,7 +18,7 @@ char	*apply_precision_for_s(char *str, t_format *format)
 	char	*new_str;
 
 	len = ft_strlen(str);
-	if (format->precision >= len)
+	if (format->precision < 0 || format->precision >= len)
 		return (ft_strdup(str));
 	new_str = ft_calloc(format->precision + 1, sizeof(char));
 	if (!new_str)

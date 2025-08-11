@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   precision_s.c                                      :+:      :+:    :+:   */
+/*   gets.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 11:23:53 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/28 16:11:29 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/03/19 10:01:08 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/03/19 10:01:09 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../ft_printf.h"
+#ifndef GETS_H
+# define GETS_H
 
-char	*precision_s(char *str, t_format *format)
-{
-	size_t	len;
-	char	*new_str;
+# include "../struct.h"
 
-	len = ft_strlen(str);
-	if (format->precision < 0 || format->precision >= len)
-		return (ft_strdup(str));
-	new_str = ft_calloc(format->precision + 1, sizeof(char));
-	if (!new_str)
-		return (NULL);
-	ft_memcpy(new_str, str, format->precision);
-	return (new_str);
-}
+int		get_minimum(const t_stack *stack);
+int		get_maximum(const t_stack *stack);
+int		get_index(const t_stack *stack, int element);
+
+#endif /* GETS_H */

@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   precision_s.c                                      :+:      :+:    :+:   */
+/*   random.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpoesy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/28 11:23:53 by mpoesy            #+#    #+#             */
-/*   Updated: 2024/11/28 16:11:29 by mpoesy           ###   ########.fr       */
+/*   Created: 2025/03/19 10:01:10 by mpoesy            #+#    #+#             */
+/*   Updated: 2025/03/19 10:01:11 by mpoesy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../ft_printf.h"
+#ifndef RANDOM_H
+# define RANDOM_H
 
-char	*precision_s(char *str, t_format *format)
-{
-	size_t	len;
-	char	*new_str;
+# include <stdbool.h>
+# include "../struct.h"
+# include "../gets/gets.h"
 
-	len = ft_strlen(str);
-	if (format->precision < 0 || format->precision >= len)
-		return (ft_strdup(str));
-	new_str = ft_calloc(format->precision + 1, sizeof(char));
-	if (!new_str)
-		return (NULL);
-	ft_memcpy(new_str, str, format->precision);
-	return (new_str);
-}
+bool	is_ordered(const t_stack *stack);
+bool	is_sorted(const t_stack *stack);
+
+#endif

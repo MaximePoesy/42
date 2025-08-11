@@ -11,20 +11,22 @@ RESET = \033[0m
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I. -Ilibft
 LDFLAGS = -Llibft -lft
-SRC = 	push_swap.c \
-	parsing.c \
-	operations/operations_a.c \
-	operations/operations_b.c \
-	operations/operations_c.c \
-	sort/sort.c \
-	sort/sort_two.c \
-	sort/sortatob/calculate_move_atob.c \
-	sort/sortatob/find_best_candidate_atob.c \
-	sort/sortatob/pushtob.c \
-	sort/sortbtoa/calculate_move_btoa.c \
-	sort/sortbtoa/find_best_candidate_btoa.c \
-	sort/sortbtoa/pushtoa.c \
-	isnt_sorted.c
+SRC = 	src/algorithms/bubble_sort.c \
+	src/algorithms/radix_sort.c \
+	src/algorithms/sort_five.c \
+	src/algorithms/sort_large.c \
+	src/algorithms/sort_three.c \
+	src/error_checks/error_checks.c \
+	src/gets/gets.c \
+	src/mini_strtoi/mini_strtoi.c \
+	src/operations/push.c \
+	src/operations/reverse_rotate.c \
+	src/operations/rotate.c \
+	src/operations/swap.c \
+	src/push_swap.c \
+	src/random/random.c \
+	src/setup_stacks/setup_stacks.c \
+	src/utilities_algorithms/utilities_algorithms.c
 
 OBJ = $(SRC:.c=.o)
 NAME = push_swap
@@ -54,7 +56,7 @@ clean:
 	@echo "$(GREEN)push_swap CLEANED!$(RESET)"
 
 fclean:
-	@echo "$(BLUE)Cleaning fractol object files...$(RESET)"
+	@echo "$(BLUE)Cleaning push_swap object files...$(RESET)"
 	@rm -f $(OBJ)
 	@echo "$(BLUE)Removing libft archive...$(RESET)"
 	@make -s -C $(LIBFT_DIR) fclean
