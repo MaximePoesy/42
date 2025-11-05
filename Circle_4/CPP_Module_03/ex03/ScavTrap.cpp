@@ -15,12 +15,11 @@
 #include "ClapTrap.hpp"
 #include "ScavTrap.hpp"
 
-ScavTrap::ScavTrap()
+ScavTrap::ScavTrap() : ClapTrap()
 {
 	health = 100;
 	energy = 50;
 	attackDamage = 20;
-	name = "Bumblebee";
 	std::cout << "ScavTrap Default constructor called for " << name << std::endl;
 }
 
@@ -29,7 +28,6 @@ ScavTrap::ScavTrap(std::string name) : ClapTrap(name)
 	health = 100;
 	energy = 50;
 	attackDamage = 20;
-	this->name = ClapTrap::name;
 	std::cout << "ScavTrap Name constructor called for " << name << std::endl;
 }
 
