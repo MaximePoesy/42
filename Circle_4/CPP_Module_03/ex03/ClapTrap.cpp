@@ -20,7 +20,7 @@ ClapTrap::ClapTrap()
 	energy = 10;
 	attackDamage = 0;
 	name = "Bumblebee";
-	std::cout << "Default constructor called for " << name << std::endl;
+	std::cout << "ClapTrap Default constructor called for " << name << std::endl;
 }
 
 ClapTrap::ClapTrap(std::string name)
@@ -29,18 +29,18 @@ ClapTrap::ClapTrap(std::string name)
 	energy = 10;
 	attackDamage = 0;
 	this->name = name;
-	std::cout << "Name constructor called for " << name << std::endl;
+	std::cout << "ClapTrap Name constructor called for " << name << std::endl;
 }
 
 ClapTrap::~ClapTrap()
 {
-	std::cout << "Destructor called for " << name << std::endl;
+	std::cout << "ClapTrap Destructor called for " << name << std::endl;
 }
 
 ClapTrap::ClapTrap(const ClapTrap &other)
 {
 	*this = other;
-	std::cout << "Copy constructor called for " << name << std::endl;
+	std::cout << "ClapTrap Copy constructor called for " << name << std::endl;
 }
 
 ClapTrap &ClapTrap::operator=(const ClapTrap &other)
