@@ -93,9 +93,11 @@ int main()
         me.use(0, target);
         me.use(1, target);
 
-        std::cout << "-- Unequipping slot 0 --" << std::endl;
+        std::cout << "-- Unequipping slots 0 & 1 --" << std::endl;
         me.unequip(0);
+        me.unequip(1);
         me.use(0, target); // should do nothing
+        me.use(1, target);
 
         delete src;
         // ice and cure unequipped must be handled externally

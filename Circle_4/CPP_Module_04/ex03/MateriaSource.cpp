@@ -14,9 +14,10 @@ MateriaSource::~MateriaSource()
 
 MateriaSource::MateriaSource(const MateriaSource& other)
 {
+    for (int i = 0; i < 4; i++)
+        materias[i] = 0;
     *this = other;
 }
-
 MateriaSource &MateriaSource::operator=(const MateriaSource& other)
 {
     if (this != &other)
@@ -37,10 +38,12 @@ void MateriaSource::learnMateria(AMateria* m)
     {
         if (!materias[i])
         {
-            materias[i] = m->clone(); // store a clone
+            materias[i] = m->clone(); // stores a clone
+            delete m;
             return;
         }
     }
+    delete m;
 }
 
 AMateria* MateriaSource::createMateria(std::string const& type)
