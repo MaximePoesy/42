@@ -10,60 +10,169 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Animal.hpp"
-#include "Dog.hpp"
-#include "Cat.hpp"
 #include <iostream>
+#include "MateriaSource.hpp"
+#include "Character.hpp"
+#include "Ice.hpp"
+#include "Cure.hpp"
+
+void separator(const std::string &title)
+{
+    std::cout << "\n===== " << title << " =====" << std::endl;
+}
 
 int main()
 {
-    std::cout << "===== Basic Creation and Deletion =====" << std::endl;
-    const Animal* j = new Dog();
-    const Animal* i = new Cat();
-    delete j; // should not leak
-    delete i;
-
-    std::cout << std::endl;
-    
-    std::cout << "===== Array of Animals =====" << std::endl;
-
-    const int size = 6;
-    Animal* animals[size];
-
-    // Fill first half with Dogs, second half with Cats
-    for (int idx = 0; idx < size; idx++)
+    separator("Basic usage test from subject");
     {
-        if (idx < size / 2)
-            animals[idx] = new Dog();
-        else
-            animals[idx] = new Cat();
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
+
+        ICharacter* me = new Character("me");
+        AMateria* tmp;
+
+        tmp = src->createMateria("ice");
+        me->equip(tmp);
+        tmp = src->createMateria("cure");
+        me->equip(tmp);
+
+        ICharacter* bob = new Character("bob");
+
+        me->use(0, *bob);
+        me->use(1, *bob);
+
+        delete bob;
+        delete me;
+        delete src;
     }
 
-    std::cout << std::endl;
-    std::cout << "===== Deleting Animals =====" << std::endl;
-    for (int idx = 0; idx < size; idx++)
-        delete animals[idx]; // deletes as Animal*, calls proper destructors
-
-    std::cout << std::endl;
-    std::cout << "===== Deep Copy Test (Dog) =====" << std::endl;
-    Dog basicDog;
+    separator("Trying to learn more than 4 Materias");
     {
-        Dog copyDog = basicDog; // calls copy constructor (deep copy)
-        std::cout << "Exiting scope of copyDog..." << std::endl;
-    } // copyDog destroyed, basicDog must still have its Brain intact
-    std::cout << "Back in main, basicDog still alive!" << std::endl;
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
+        src->learnMateria(new Ice()); // should be ignored safely
+        delete src;
+    }
 
-    std::cout << std::endl;
-    std::cout << "===== Deep Copy Test (Cat) =====" << std::endl;
-    Cat basicCat;
+    separator("Trying to equip more than 4 Materias");
     {
-        Cat copyCat;
-        copyCat = basicCat; // calls copy assignment (deep copy)
-        std::cout << "Exiting scope of copyCat..." << std::endl;
-    } // copyCat destroyed, basicCat must still have its Brain intact
+        ICharacter* alice = new Character("Alice");
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
 
-    std::cout << std::endl;
-    std::cout << "===== End of main =====" << std::endl;
-    
+        for (int i = 0; i < 6; i++)
+        {
+            AMateria* tmp = src->createMateria(i % 2 ? "ice" : "cure");
+            alice->equip(tmp);
+        }
+
+        delete src;
+        delete alice;
+    }
+
+    separator("Using and unequipping Materias");
+    {
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
+
+        Character me("me");
+        Character target("enemy");
+
+        AMateria* ice = src->createMateria("ice");
+        AMateria* cure = src->createMateria("cure");
+        me.equip(ice);
+        me.equip(cure);
+
+        std::cout << "-- Using Materias --" << std::endl;
+        me.use(0, target);
+        me.use(1, target);
+
+        std::cout << "-- Unequipping slot 0 --" << std::endl;
+        me.unequip(0);
+        me.use(0, target); // should do nothing
+
+        delete src;
+        // ice and cure unequipped must be handled externally
+        delete ice;
+        delete cure;
+    }
+
+    separator("Deep copy of Character");
+    {
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        src->learnMateria(new Cure());
+
+        Character original("Original");
+        original.equip(src->createMateria("ice"));
+        original.equip(src->createMateria("cure"));
+
+        std::cout << "-- Creating copy --" << std::endl;
+        Character copy = original; // invokes copy constructor
+
+        Character target("Target");
+        std::cout << "-- Using original's Materias --" << std::endl;
+        original.use(0, target);
+        original.use(1, target);
+
+        std::cout << "-- Using copy's Materias --" << std::endl;
+        copy.use(0, target);
+        copy.use(1, target);
+
+        std::cout << "-- Destroying everything --" << std::endl;
+        delete src;
+    }
+
+    separator("MateriaSource deep copy test");
+    {
+        MateriaSource source;
+        source.learnMateria(new Ice());
+        source.learnMateria(new Cure());
+
+        std::cout << "-- Copy constructing a new source --" << std::endl;
+        MateriaSource copy(source);
+
+        Character hero("Hero");
+        AMateria* tmp;
+
+        tmp = copy.createMateria("ice");
+        hero.equip(tmp);
+        tmp = copy.createMateria("cure");
+        hero.equip(tmp);
+
+        Character boss("Boss");
+        hero.use(0, boss);
+        hero.use(1, boss);
+    }
+
+    separator("Invalid type test");
+    {
+        IMateriaSource* src = new MateriaSource();
+        src->learnMateria(new Ice());
+        AMateria* tmp = src->createMateria("fire"); // unknown type
+        if (!tmp)
+            std::cout << "Could not create 'fire' materia (as expected)" << std::endl;
+        delete src;
+    }
+
+    separator("Out-of-bounds and null safety");
+    {
+        Character test("Tester");
+        test.use(-1, test);
+        test.use(5, test);
+        test.unequip(-2);
+        test.unequip(4);
+        test.equip(NULL);
+    }
+
+    separator("All tests completed successfully");
     return 0;
 }
+
+

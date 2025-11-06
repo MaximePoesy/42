@@ -3,17 +3,14 @@
 
 Cure::Cure() : AMateria("cure")
 {
-
 }
 
 Cure::~Cure()
 {
-
 }
 
 Cure::Cure(const Cure &other) : AMateria(other)
 {
-
 }
 
 Cure& Cure::operator=(const Cure &other)
