@@ -3,7 +3,6 @@
 # include <string>
 # include <exception>
 # include <iostream>
-# include "Bureaucrat.hpp"
 
 class Bureaucrat;
 
@@ -26,7 +25,7 @@ class Form
 	bool getSigned() const;
 	int getGradeToSign() const;
 	int getGradeToExecute() const;
-	void	beSigned(Bureaucrat &b);
+	void beSigned(Bureaucrat &b);
 
 	class GradeTooHighException : public std::exception
 	{
@@ -35,6 +34,12 @@ class Form
 	};
 
 	class GradeTooLowException : public std::exception
+	{
+	public:
+		const char* what() const throw();
+	};
+
+	class FormNotSignedException : public std::exception
 	{
 	public:
 		const char* what() const throw();
