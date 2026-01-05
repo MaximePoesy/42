@@ -1,9 +1,10 @@
-NAME = convert
+NAME = ClassTypes
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 SRC = main.cpp \
-       ScalarConverter.cpp
+       functions.cpp \
+       Base.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
