@@ -41,17 +41,7 @@ private:
 
     std::vector<size_t> generateJacobsthal(size_t n);
 
-    void printVector(const std::vector<int>& vec) const
-    {
-        for (size_t i = 0; i < vec.size(); ++i)
-        {
-            std::cout << vec[i];
-            if (i != vec.size() - 1)
-                std::cout << " ";
-        }
-        std::cout << std::endl;
-    }
-
+    void printVector(const std::vector<int>& vec) const;
 
     /* ================= DEQUE VERSION ================= */
 

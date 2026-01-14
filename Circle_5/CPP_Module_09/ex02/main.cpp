@@ -11,7 +11,12 @@ int main(int argc, char **argv)
     }
     ++argv;
     PmergeMe pm;
-    pm.parseInput(argv);
-
+    try
+    {
+    	pm.parseInput(argv);
+    }
+    catch (std::exception& e)
+    {
+    }
     return 0;
 }

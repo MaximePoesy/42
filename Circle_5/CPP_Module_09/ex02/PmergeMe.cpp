@@ -20,15 +20,19 @@ void PmergeMe::parseInput(char** av)
         if (*endptr != '\0') //found bad char
         {
             std::cerr << "Error: invalid character '" << av[i] << "'" << std::endl;
-            exit(1);
+            throw std::runtime_error("Invalid input");
         }
 
         if (value < INT_MIN || value > INT_MAX)
         {
             std::cerr << "Error: out of range: '" << av[i] << "'" << std::endl;
-            exit(1);
+            throw std::runtime_error("Invalid input");
         }
-
+	if (value < 0)
+        {
+            std::cerr << "Error: negative number: '" << av[i] << "'" << std::endl;
+            throw std::runtime_error("Invalid input");
+        }
         int intValue = static_cast<int>(value);
 
         // Check for duplicates
@@ -44,7 +48,7 @@ void PmergeMe::parseInput(char** av)
         if (duplicate)
         {
             std::cerr << "Error: duplicate number '" << intValue << "'" << std::endl;
-            exit(1);
+            throw std::runtime_error("Invalid input");
         }
 
         _vectorData.push_back(intValue);
@@ -205,6 +209,17 @@ int PmergeMe::binarySearchVector(const std::vector<int>& arr, int value)
     return left;
 }
 
+void PmergeMe::printVector(const std::vector<int>& vec) const
+{
+    for (size_t i = 0; i < vec.size(); ++i)
+    {
+        std::cout << vec[i];
+        if (i != vec.size() - 1)
+            std::cout << " ";
+    }
+    std::cout << std::endl;
+}
+    
 void PmergeMe::sortDeque()
 {
     _comparisons = 0;
