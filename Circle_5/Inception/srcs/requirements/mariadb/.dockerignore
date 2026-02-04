@@ -1,0 +1,14 @@
+.git
+.gitignore
+.DS_Store
+Thumbs.db
+*.log
+node_modules
+tmp
+cache
+secrets/
+.env
+*.tar.gz
+*.zip
+*.bak
+*.swp
