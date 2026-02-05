@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 # non interatcive because automated
 ENV DEBIAN_FRONTEND=noninteractive
