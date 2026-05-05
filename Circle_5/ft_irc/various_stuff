@@ -24,7 +24,7 @@ User :
 
 MODE :
 	- When a user join a channel:
-		- if the channel doesn't exist, the channel is created and teh user become a channel operator.
+		- if the channel doesn't exist, the channel is created and the user becomes a channel operator.
 		- if the channel exists, whether the user joins is entirely decided by the current modes of the channel. For example if the channel is invite-only (+i), the user may only join if the user is invited.
 		
 		
@@ -44,7 +44,7 @@ struct :
     			struct addrinfo *ai_next;      // linked list, next node
 		};
 		
-	- soockaddr :
+	- sockaddr :
 		struct sockaddr {
     			unsigned short    sa_family;    // address family, AF_xxx
     			char              sa_data[14];  // 14 bytes of protocol address
@@ -86,4 +86,74 @@ IP Adresses : (not needed here since the server and client are on the same machi
 	Note : This code doesn't work with DNS lookup like "www.example.com"
 	For that you would need getaddrinfo().
 	
+	If you want to setup a server to listen to your server IP, prot 3490 (It doesn't listen, it only sets up the structure) :
+		
+		int status;
+		struct addrinfo hints;
+		struct addrinfo *servinfo;  // will point to the results
 
+		memset(&hints, 0, sizeof hints); // make sure the struct is empty
+		hints.ai_family = AF_UNSPEC;     // don't care IPv4 or IPv6
+		hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+		hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+
+		if ((status = getaddrinfo(NULL, "3490", &hints, &servinfo)) != 0) {
+ 		   fprintf(stderr, "gai error: %s\n", gai_strerror(status)); // Note : cannot be used in ft_irc, but good for an early version check
+ 		   exit(1);
+		}
+
+		// servinfo now points to a linked list of 1 or more
+		// struct addrinfos
+
+		// ... do everything until you don't need servinfo anymore ....
+
+		freeaddrinfo(servinfo); // free the linked-list
+		
+Socket :
+	#include <sys/types.h>
+	#include <sys/socket.h>
+
+	int socket(int domain, int type, int protocol); 
+	
+	
+	You basically use the result of getaddrinfo() to feed the socket() function.
+	like this :
+	
+	s = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	//ai_family is AF_INET, AF_INET6, AF_UNSPEC
+	//ai_socktype is SOCK_STREAM, SOCK_DGRAM
+	//ai_protocol : use 0 for any (or IPPROTO_TCP for TCP, IPPROTO_UDP for UDP, etc...)
+	
+	It returns a socket descriptor that is usable for later system calls.
+	
+	Now that you have a socket that is ready you need to bind it to a local port of your machine (Only useful for the server, as the client will only do a connect()) :	
+	
+		#include <sys/types.h>
+		#include <sys/socket.h>
+
+		int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
+		
+	Example :
+	
+		struct addrinfo hints, *res;
+		int sockfd;
+
+		// first, load up address structs with getaddrinfo():
+
+		memset(&hints, 0, sizeof hints);
+		hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_PASSIVE;     // fill in the host's IP.
+
+		getaddrinfo(NULL, "3490", &hints, &res); // No DNS, listen on 3490
+
+		// make a socket:
+
+		sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+
+		// bind it to the port we passed in to getaddrinfo():
+
+		bind(sockfd, res->ai_addr, res->ai_addrlen);
+		
+		
+		
