@@ -110,10 +110,10 @@ IP Adresses : (not needed here since the server and client are on the same machi
 		freeaddrinfo(servinfo); // free the linked-list
 		
 Socket :
-	#include <sys/types.h>
-	#include <sys/socket.h>
+		#include <sys/types.h>
+		#include <sys/socket.h>
 
-	int socket(int domain, int type, int protocol); 
+		int socket(int domain, int type, int protocol); 
 	
 	
 	You basically use the result of getaddrinfo() to feed the socket() function.
@@ -143,7 +143,7 @@ Socket :
 		memset(&hints, 0, sizeof hints);
 		hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
 		hints.ai_socktype = SOCK_STREAM;
-		hints.ai_flags = AI_PASSIVE;     // fill in the host's IP.
+		hints.ai_flags = AI_PASSIVE;     // auto fill the host's IP.
 
 		getaddrinfo(NULL, "3490", &hints, &res); // No DNS, listen on 3490
 
@@ -155,5 +155,110 @@ Socket :
 
 		bind(sockfd, res->ai_addr, res->ai_addrlen);
 		
+	Then to not have the socket hog the port (causing bind() to fail) we need to set this :
+	
+		int yes=1;
+		setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
 		
+	Now that we used bind() to say "I want to connect there" we have to actually connect() to it (or start listen()ing for a server, then accept() the connections). (used mostly for clients) :
+	
+		#include <sys/types.h>
+		#include <sys/socket.h>
+
+		int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 		
+	Note that you are a client you do not need to bind() as you don't care what port you are using, ther kernel gives you one and, when send() to a server, the server will get the information needed to send() back.
+	
+	Now for the server we need to listen() for any client connect()ing :
+	
+		int listen(int sockfd, int backlog); // sockfd is the result form socket(), backlog is the number of connections allowed on the queue.
+	
+	If we receive a connection we need to use :
+	
+		#include <sys/types.h>
+		#include <sys/socket.h>
+
+		int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen); 
+		
+	While the socket is still listening for new connections, a new socket is created and given as output, so now on this new socket, we can now send() and recv().
+	addr will be a local sockaddr to use as storage.
+	Example (server) :
+	
+		#include <string.h>
+		#include <sys/types.h>
+		#include <sys/socket.h>
+		#include <netdb.h>
+
+		#define MYPORT "3490"  // the port users will be connecting to
+		#define BACKLOG 10     // how many pending connections queue holds
+
+		int main(void)
+		{
+	  	  struct sockaddr_storage their_addr;
+	  	  socklen_t addr_size;
+	  	  struct addrinfo hints, *res;
+	  	  int sockfd, new_fd;
+
+	  	  // !! don't forget your error checking for these calls !!
+
+	  	  // first, load up address structs with getaddrinfo():
+
+	  	  memset(&hints, 0, sizeof hints);
+	  	  hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+	  	  hints.ai_socktype = SOCK_STREAM;
+	  	  hints.ai_flags = AI_PASSIVE;     // auto fill the host's IP.
+
+	  	  getaddrinfo(NULL, MYPORT, &hints, &res);
+
+	  	  // make a socket, bind it, and listen on it:
+
+	  	  sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	  	  bind(sockfd, res->ai_addr, res->ai_addrlen);
+	  	  listen(sockfd, BACKLOG);
+
+	  	  // now accept an incoming connection:
+
+	  	  addr_size = sizeof their_addr;
+	  	  new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+			
+	What if you want to send() something? :
+	
+		int send(int sockfd, const void *msg, int len, int flags);
+		
+	sockfd is where you want to send the message, len is the length of msg, and flags should probably be 0.
+	Note that send might not send everything at once. Check that with the output of send(). If that's the case, send() again the rest.
+		
+	In the sane way if you want to recv() :
+	
+		int recv(int sockfd, void *buf, int len, int flags);		
+	
+	sockfd is what you read from, len the length of buf, and flags 0. It returns the number of bytes read. 0 means connection closed.
+	
+	When everything is finished, just close() the socket descriptor. (On Windows use closesocket() instead of close())
+	You could also use shutdown() for more control, but in this case, it is irrelevant.	
+	
+Blocking :
+	
+	For ft_irc we cannot use accept as it is blocking, which means that while it is waiting for information it cannot do anything else.
+	Instead of accept() we can setup the fd as nonblocking just after setting it up :
+		
+		sockfd = socket(PF_INET, SOCK_STREAM, 0);
+		fcntl(sockfd, F_SETFL, O_NONBLOCK);
+	
+	However doing it this way would consume a lot more CPU resources than normal as your program would stay in a busy-wait state looking for data.
+	
+	So, instead, we can use poll() to check if there is info ready to read on the fd.
+	
+	poll :
+		
+		#include <poll.h>
+
+		int poll(struct pollfd fds[], nfds_t nfds, int timeout);
+		
+	pollfd has the following structure :
+	
+		struct pollfd {
+			int   fd;         /* file descriptor */
+			short events;     /* requested events */
+			short revents;    /* returned events */
+		};
