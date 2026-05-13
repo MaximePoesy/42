@@ -3,7 +3,7 @@
 bool Server::running = true;
 
 Server::Server(const std::string& port, std::string password)
-    : port(port), password(password), sockfd(-1), maxconn(10)
+    : port(port), password(password), sockfd(-1), max_conn(10)
 {
     //running = true;
 }
