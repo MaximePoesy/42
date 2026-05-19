@@ -32,8 +32,9 @@ bool Server::start()
 
 bool Server::setup_socket()
 {
-    struct addrinfo hints{}, *p, *res;
+    struct addrinfo hints, *p, *res;
 
+    std::memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
@@ -44,7 +45,7 @@ bool Server::setup_socket()
         return false;
     }
 
-    for (p = res; p != nullptr; p = p->ai_next)
+    for (p = res; p != NULL; p = p->ai_next)
     {
         sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (sockfd < 0)
@@ -103,10 +104,10 @@ void Server::run()
         
         if (ready < 0)
 	{
-    	    if (errno == EINTR) // signal interrupt
-    	        break;
-    	    perror("poll");
-    	    break;
+		if (errno == EINTR) // signal interrupt
+			break;
+		perror("poll");
+		break;
 	}
 	
         size_t i = 0;
@@ -175,8 +176,8 @@ bool Server::handle_client(size_t i)
 
     if (bytes < 0)
     {
-    	if (errno == EAGAIN || errno == EWOULDBLOCK)
-        	return false;
+        if (errno == EAGAIN || errno == EWOULDBLOCK)
+            return false;
         // socket error
         disconnect_client(i);
         return true;
@@ -223,30 +224,12 @@ void Server::prepare_send(int fd, const std::string& msg)
     }
 }
 
-// util function to handle partial send()s
-static int sendall(int s, const char *buf, int len)
-{
-    int total = 0;
-    int bytesleft = len;
-    int n = 0;
-
-    while (total < len)
-    {
-        n = send(s, buf + total, bytesleft, 0);
-        if (n == -1)
-            break;
-        total += n;
-        bytesleft -= n;
-    }
-    return n == -1 ? -1 : total;  // return bytes sent or -1
-}
-
 void Server::flush_client(size_t i)
 {
     int fd = fds[i].fd;
     std::string& buf = client_buffers[fd].outgoing;
 
-    int bytes = sendall(fd, buf.c_str(), buf.size());
+    int bytes = send(fd, buf.c_str(), buf.size(), 0);
 
     if (bytes < 0)
     {
@@ -272,7 +255,7 @@ void Server::disconnect_client(size_t i)
 
 void Server::stop()
 {
-    for (std::vector<pollfd>::iterator it = fds.begin(); it != fds.end(); ++it)
+    for (std::vector<pollfd>::iterator it = fds.begin(); it != fds.end(); it++)
         close(it->fd);
 
     fds.clear();

@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <iostream>
 #include <cstring>
+#include <cstdio>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -29,10 +30,10 @@ public:
     void stop();
 
 private:
-    std::string                 password;
     std::string                 port;
-    int                         max_conn;
+    std::string                 password;
     int                         sockfd;
+    int                         max_conn;
     std::vector<pollfd>         fds;
     std::map<int, ClientBuffer> client_buffers;
     static bool                 running;
