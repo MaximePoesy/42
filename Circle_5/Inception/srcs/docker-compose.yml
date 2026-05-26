@@ -9,7 +9,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     env_file: .env
-    restart: unless-stopped
+    restart: always
 
   wordpress:
     build: ./requirements/wordpress
@@ -21,7 +21,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     env_file: .env
-    restart: unless-stopped
+    restart: always
 
   nginx:
     build: ./requirements/nginx
@@ -35,7 +35,7 @@ services:
     ports:
       - "443:443"
     env_file: .env
-    restart: unless-stopped
+    restart: always
 
 networks:
     inception:

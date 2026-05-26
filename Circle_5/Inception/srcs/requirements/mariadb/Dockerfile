@@ -1,6 +1,6 @@
 FROM debian:bookworm
 
-# non interatcive because automated
+# non interactive because automated
 ENV DEBIAN_FRONTEND=noninteractive
 
 # installs mariadb and cleans cache (reduces image size)
