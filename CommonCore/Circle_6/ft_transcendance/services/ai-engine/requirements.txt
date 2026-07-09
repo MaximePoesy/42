@@ -1,0 +1,24 @@
+# --- Secrets Management ---
+hvac             # HashiCorp Vault API client for Python
+
+# --- Web Framework & Server ---
+fastapi          # Web framework for building the API endpoints
+uvicorn          # ASGI (Asynchronous Server Gateway Interface) server to run and serve the FastAPI application
+
+# --- Healthcare Standards (Interoperability) ---
+hl7              # Library for parsing and handling legacy HL7 v2 messages
+fhir.resources   # Python models for the modern HL7 FHIR standard
+
+# --- Data Validation & Testing ---
+pydantic         # Data validation and settings management using Python type hints
+pytest           # Testing framework to write and run automated test suites
+
+# --- AI & RAG ---
+langchain
+langchain-community
+ollama
+chromadb
+sentence-transformers
+
+# --- Rate Limiter --- (Module asking to implement complete LLM interface)
+slowapi

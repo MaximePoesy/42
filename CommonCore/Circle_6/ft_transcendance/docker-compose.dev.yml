@@ -1,0 +1,260 @@
+# Docker Compose configuration for the multi-container Transcendance application.
+# Defines front-end, back-end, and AI engine services on a shared internal network.
+services:
+  # --- FRONT-END SERVICE ---
+  front:
+    build:
+      context: ./front
+      dockerfile: Dockerfile.dev
+    container_name: ft_front
+    ports:
+      - "127.0.0.1:5173:5173" # loopback only: debug access, real traffic goes through the WAF (8443)
+    environment:
+      NODE_ENV: development
+      PORT: 5173
+    volumes:
+      - ./front:/app # Bind mount local front-end source files into the container
+      - /app/node_modules # Anonymous volume keeps container node_modules isolated
+    networks:
+      - ft_network # Join the shared application network
+    depends_on:
+      - back # Start the back-end before the front-end service
+
+  # --- BACK-END SERVICE ---
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+    container_name: ft_back
+    ports:
+      - "127.0.0.1:3001:3001" # loopback only: debug access, real traffic goes through the WAF (8443)
+    volumes:
+      - ./back:/app # Bind mount local back-end source files for live development
+      - /app/node_modules # Preserve installed dependencies inside the container
+      - vault_init:/vault/init:ro # Read AppRole credentials from vault-init
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      VAULT_ADDR: ${VAULT_ADDR:-http://ft_vault:8200}
+      VAULT_ROLE_ID_FILE: /vault/init/back-role-id
+      VAULT_SECRET_ID_FILE: /vault/init/back-secret-id
+    networks:
+      - ft_network
+    depends_on:
+      db:
+        condition: service_healthy
+      vault-init:
+        condition: service_completed_successfully
+
+  # --- AI ENGINE SERVICE ---
+  ai-engine:
+    build:
+      context: ./services/ai-engine
+      dockerfile: Dockerfile.dev
+    container_name: ft_ai-engine
+    ports:
+      - "127.0.0.1:8000:8000" # loopback only: debug access, real traffic goes through the WAF (8443)
+    volumes:
+      - ./services/ai-engine:/app
+      - vault_init:/vault/init:ro # Read AppRole credentials from vault-init
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR:-http://ft_vault:8200}
+      VAULT_ROLE_ID_FILE: /vault/init/ai-role-id
+      VAULT_SECRET_ID_FILE: /vault/init/ai-secret-id
+      LLM_MODEL: ${LLM_MODEL:-smollm2:135m}
+    networks:
+      - ft_network
+    depends_on:
+      vault-init:
+        condition: service_completed_successfully
+      ollama-init:
+        condition: service_completed_successfully
+
+  # --- OLLAMA SERVICE ---
+  # alpine/ollama: lightweight image, validated on the 42 school computers
+  # (x86_64 Linux — the only evaluation target, with tight disk quotas).
+  # Note: this community image lacks the llama-server binary on arm64; if you
+  # ever need to run on an ARM machine, switch to ollama/ollama (much heavier).
+  # Pinned by digest (ollama 0.23.2): newer floating `latest` tags expect a
+  # standalone /usr/lib/ollama/llama-server binary this image doesn't ship,
+  # which breaks with "llama-server binary not found". Pinning keeps the build
+  # reproducible across machines and over time. Update deliberately, not by drift.
+  ollama:
+    image: alpine/ollama:latest@sha256:7798ed82b7e8623d33986fd8d3cf38e829cfa76a5f7bd2afe302bba8fd052bf0
+    container_name: ft_ollama
+    ports:
+      - "127.0.0.1:11434:11434" # loopback only
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ft_network
+    healthcheck:
+      # The daemon serves /api/tags once it's accepting requests.
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # --- OLLAMA MODEL PROVISIONING (one-shot container) ---
+  # Pulls the LLM + embedding models so `make up` is a single self-contained
+  # command. Idempotent: subsequent runs find the models already cached.
+  ollama-init:
+    image: alpine/ollama:latest@sha256:7798ed82b7e8623d33986fd8d3cf38e829cfa76a5f7bd2afe302bba8fd052bf0
+    container_name: ft_ollama_init
+    entrypoint: /bin/sh
+    command: /scripts/init-ollama.sh
+    environment:
+      OLLAMA_HOST: "http://ollama:11434"
+      OLLAMA_MODELS: "${LLM_MODEL:-smollm2:135m} all-minilm"
+    volumes:
+      - ./infra/ollama/init-ollama.sh:/scripts/init-ollama.sh:ro
+    networks:
+      - ft_network
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: "no"
+
+  # --- SECRETS MANAGEMENT ---
+  vault:
+    image: hashicorp/vault:latest
+    container_name: ft_vault
+    ports:
+      - "127.0.0.1:8201:8200" # loopback only
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      SKIP_SETCAP: "true"
+    # Bypass Vault v2 entrypoint wrapper that injects -dev-listen-address
+    # and causes port conflict. Call vault directly instead.
+    entrypoint: ["vault", "server", "-config=/vault/config/config.hcl"]
+    volumes:
+      - ./infra/vault/config.hcl:/vault/config/config.hcl:ro
+      - vault_data:/vault/file
+      - vault_init:/vault/init
+      - vault_secrets:/vault/secrets # Root credentials - NOT shared with app containers
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - ft_network
+    healthcheck:
+      test: ["CMD", "sh", "-c", "vault status; s=$$?; [ $$s -eq 0 ] || [ $$s -eq 2 ]"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # --- VAULT INITIALIZATION (one-shot container) ---
+  vault-init:
+    image: hashicorp/vault:latest
+    container_name: ft_vault_init
+    user: root
+    entrypoint: /bin/sh
+    command: /scripts/init-vault.sh
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR:-http://ft_vault:8200}
+      VAULT_SECRETS_DIR: /vault/secrets
+      # Secrets for the back service — BACK__<key> is written verbatim as <key> in Vault.
+      # The key name must match exactly what vaultConfig.ts reads from data.<key>.
+      # To add a new back secret: add BACK__<key> here + read data.<key> in vaultConfig.ts.
+      BACK__user: ${DB_USER:-transcendance}
+      BACK__password: ${DB_PASSWORD:-password}
+      BACK__name: ${DB_NAME:-transcendance_db}
+      BACK__host: ${DB_HOST:-db}
+      BACK__port: ${DB_PORT:-5432}
+      BACK__admin_email: ${ADMIN_EMAIL:-admin@admin.com}
+      BACK__admin_password: ${ADMIN_PASSWORD:-admin_password}
+      # Secrets for the ai-engine service — AI__<key> is written verbatim as <key> in Vault.
+      # To add a new ai secret: add AI__<key> here + read it in vault_config.py.
+      AI__ollama_host: ${OLLAMA_HOST:-http://ollama:11434}
+    volumes:
+      - ./infra/vault/init-vault.sh:/scripts/init-vault.sh:ro
+      - vault_init:/vault/init
+      - vault_secrets:/vault/secrets # Root credentials stored here, isolated from app containers
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - ft_network
+    depends_on:
+      vault:
+        condition: service_healthy
+    restart: "no"
+
+  # --- WAF (NGINX + MODSECURITY) ---
+  waf:
+    image: owasp/modsecurity-crs:nginx-alpine
+    container_name: ft_waf
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      # --- Overrides vs the owasp/modsecurity-crs image defaults ---
+      # Only set what we actually change from defaults
+      BLOCKING_PARANOIA: "2"
+      DETECTION_PARANOIA: "2"
+      ANOMALY_INBOUND: "10"
+      ANOMALY_OUTBOUND: "5"
+      ALLOWED_METHODS: "GET HEAD POST OPTIONS PUT DELETE"
+      ENFORCE_BODYPROC_URLENCODED: "1"
+      MODSEC_RESP_BODY_MIMETYPE: "text/plain text/html text/xml application/json"
+      ACCESSLOG: "/dev/stdout"
+      KEEPALIVE_TIMEOUT: "30s"
+    volumes:
+      - ./infra/nginx/default.dev.conf:/etc/nginx/templates/conf.d/default.conf.template
+      - ./infra/certs:/etc/nginx/certs
+      - ./infra/waf/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:/etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+    networks:
+      - ft_network
+    depends_on:
+      - front
+      - back
+      - ai-engine
+
+  # --- DATABASE SERVICE ---
+  db:
+    image: postgres:15-alpine
+    container_name: ft_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-transcendance}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-transcendance_db}
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432" # loopback only
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - ft_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-transcendance} -d ${DB_NAME:-transcendance_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # --- PGADMIN SERVICE ---
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ft_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+      PGADMIN_REPLACE_SERVERS_ON_STARTUP: "true"
+    ports:
+      - "127.0.0.1:5050:80" # loopback only
+    volumes:
+      - ./infra/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      - db
+    networks:
+      - ft_network
+
+# --- NETWORK CONFIGURATION ---
+networks:
+  ft_network:
+    driver: bridge # Use a bridge network for container communication
+
+# --- VOLUMES CONFIGURATION ---
+volumes:
+  db_data:
+  ollama_data:
+  vault_data: # Encrypted Vault file storage (persistent)
+  vault_init: # Shared volume for AppRole credentials (back, ai-engine)
+  vault_secrets: # Root token + unseal key - mounted ONLY by vault and vault-init

@@ -1,0 +1,32 @@
+# Dependencies
+**/node_modules
+
+# Build output
+**/dist
+**/build
+
+# Lockfiles (managed by package managers)
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Generated
+**/coverage
+**/.next
+**/.turbo
+**/.cache
+front/playwright-report
+front/test-results
+
+# Environment + secrets
+**/.env
+**/.env.*
+
+# Translations (often machine-generated, keep verbatim)
+front/src/locales
+
+# Infra files Prettier shouldn't touch
+infra/certs
+**/*.pem
+**/*.key
+**/*.crt

@@ -1,0 +1,21 @@
+{
+  "name": "ft_transcendance",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:back": "npm run dev --prefix back",
+    "dev:front": "npm run dev --prefix front",
+    "dev:all": "npm run dev --prefix back & npm run dev --prefix front",
+    "ally:front": "npm run test:e2e --prefix front",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint --prefix front && npm run lint --prefix back",
+    "lint:fix": "npm run lint:fix --prefix front && npm run lint:fix --prefix back",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3"
+  }
+}

@@ -1,0 +1,58 @@
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
+venv/
+.venv/
+
+# Node.js / JavaScript
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+
+# Binaries & Data
+*.bin
+db_data/
+ollama_data/
+chroma.sqlite3
+*.sqlite3
+*.db
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+certs/*.pem
+certs/*.key
+
+# OS & Editor Files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local Docker Compose overrides
+docker-compose.override.yml
+infra/vault/config.local.hcl
+
+# Local audit notes
+AUDIT.md
+
+# Temporary Files
+tmp/
+temp/
+
+# Playwright test artifacts
+front/playwright-report/
+front/test-results/
+front/playwright/.cache/
+
+# Vite PWA plugin — generated service worker (dev build artefact, not source)
+front/dev-dist/
+
+# End of .gitignore
